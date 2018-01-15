@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Cache;
 
 class MailVerify extends Mailable implements ShouldQueue
 {
@@ -33,8 +34,16 @@ class MailVerify extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        #todo 这里需要处理发送的验证码
-        
-        return $this->view('mails.verify');
+        $user_id = $this->user->id;
+        $key = $user_id . ':verify';
+        $value = md5($user_id . time());
+        Cache::set($key, $value, config('redis.verify'));
+        return $this->view('mails.verify')
+            ->with([
+                'url' => request()->fullUrl() . '?' . http_build_query([
+                        'uid' => $user_id,
+                        'token' => $value
+                    ])
+            ]);
     }
 }

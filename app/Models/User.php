@@ -26,4 +26,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @param $user_id
+     */
+    public function activate($user_id)
+    {
+        $user = $this->find($user_id);
+        $user->update([
+            'status' => config('status.users.available')
+        ]);
+    }
+
+    
 }

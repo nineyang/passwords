@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 
 class AccountController extends Controller
 {
@@ -21,8 +24,26 @@ class AccountController extends Controller
         $this->user = $user;
     }
 
-    public function verify()
+    /**
+     * @param Request $request
+     * @return $this
+     */
+    public function verify(Request $request)
     {
+        $key = "{$request->get('uid')}:verify";
+        $value = Cache::get($key);
+        if ($value == $request->get('token')) {
+            $title = 'Success';
+            $info = 'Activation successful';
+        } else {
+            $title = 'Failed';
+            $info = 'Activation failed';
+        }
 
+        $this->user->activate($request->get('uid'));
+
+        Cache::delete($value);
+
+        return view('mails.verify_result', compact('title', 'info'));
     }
 }
