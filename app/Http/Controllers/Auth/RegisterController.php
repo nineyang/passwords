@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SendEmailEvent;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -73,14 +74,7 @@ class RegisterController extends Controller
             'status' => config('status.users.unactivated')
         ]);
         # 邮件队列发送邮件
-        try {
-            Mail::to($user)->send(new MailVerify($user));
-        } catch (\Exception $exception) {
-            Log::debug('send email failed', [
-                'error_msg' => $exception->getMessage(),
-                'user_id' => $user->id
-            ]);
-        }
+        event(new SendEmailEvent($user));
 
         return $user;
     }

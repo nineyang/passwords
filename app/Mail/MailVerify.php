@@ -21,9 +21,9 @@ class MailVerify extends Mailable implements ShouldQueue
      * MailVerify constructor.
      * @param User $user
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-//        $this->user = $user;
+        $this->user = $user;
     }
 
     /**
@@ -34,6 +34,7 @@ class MailVerify extends Mailable implements ShouldQueue
     public function build()
     {
         #todo 这里需要处理发送的验证码
+        
         return $this->view('mails.verify');
     }
 }

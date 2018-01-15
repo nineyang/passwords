@@ -1,1 +1,5 @@
-<p>hello,nine</p>
+<p>
+    邮箱激活
+    <a href="">地址</a>
+
+</p>
