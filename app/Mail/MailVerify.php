@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,13 +13,17 @@ class MailVerify extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * @var User
      */
-    public function __construct()
+    protected $user;
+
+    /**
+     * MailVerify constructor.
+     * @param User $user
+     */
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -28,6 +33,6 @@ class MailVerify extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.test');
+        return $this->view('mails.verify');
     }
 }
