@@ -10,7 +10,6 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $res = Mail::to('nine@segmentfault.com')->send(new MailVerify());
-        dd($res);
+        
     }
 }
