@@ -59,7 +59,7 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'mail',
+            'connection' => 'mails',
             'queue' => 'default',
             'retry_after' => 90,
         ],

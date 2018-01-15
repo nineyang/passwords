@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Mail\MailVerify;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -62,13 +65,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'status' => config('users.unactivated')
+            'status' => config('status.users.unactivated')
         ]);
         # 邮件队列发送邮件
+        try {
+            Mail::to($user)->send(new MailVerify($user));
+        } catch (\Exception $exception) {
+            Log::debug('send email failed', [
+                'error_msg' => $exception->getMessage(),
+                'user_id' => $user->id
+            ]);
+        }
 
         return $user;
     }

@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MailVerify extends Mailable
+class MailVerify extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -21,9 +21,9 @@ class MailVerify extends Mailable
      * MailVerify constructor.
      * @param User $user
      */
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+//        $this->user = $user;
     }
 
     /**
@@ -33,6 +33,7 @@ class MailVerify extends Mailable
      */
     public function build()
     {
+        #todo 这里需要处理发送的验证码
         return $this->view('mails.verify');
     }
 }
