@@ -16,7 +16,7 @@ class MailVerify extends Mailable implements ShouldQueue
     /**
      * @var User
      */
-    protected $user;
+    public $user;
 
     /**
      * MailVerify constructor.
@@ -38,12 +38,14 @@ class MailVerify extends Mailable implements ShouldQueue
         $key = $user_id . ':verify';
         $value = md5($user_id . time());
         Cache::set($key, $value, config('redis.verify'));
-        return $this->view('mails.verify')
+        return $this->markdown('mails.verify')
             ->with([
-                'url' => request()->fullUrl() . '?' . http_build_query([
+                'actionUrl' => request()->fullUrl() . '?' . http_build_query([
                         'uid' => $user_id,
                         'token' => $value
-                    ])
+                    ]),
+                'actionText' => 'Verify Email',
+                'lineText' => 'You are receiving this email because we received a verify email request for your account.'
             ]);
     }
 }
