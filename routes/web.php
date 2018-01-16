@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/welcome', 'WelcomeController@index')->name('home');
 
 Route::group(['prefix' => 'user'], function () {
     Route::get('/email/verify', 'AccountController@verify')->name('email.verify');

@@ -26,22 +26,27 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function verify(Request $request)
     {
         $key = "{$request->get('uid')}:verify";
         $value = Cache::get($key);
-        if ($value == $request->get('token')) {
+        $user = $this->user->checkAndGet($request->get('uid'));
+        if ($user) {
             $title = 'Success';
-            $info = 'Activation successful';
+            $info = 'It doesn\'t need to be activated again';
         } else {
-            $title = 'Failed';
-            $info = 'Activation failed';
+            if ($value == $request->get('token')) {
+                $title = 'Success';
+                $info = 'Activation successful';
+            } else {
+                $title = 'Failed';
+                $info = 'Activation failed';
+            }
         }
 
         $this->user->activate($request->get('uid'));
-
         Cache::delete($value);
 
         return view('mails.verify_result', compact('title', 'info'));
