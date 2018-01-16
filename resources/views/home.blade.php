@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+    <div class="container-fluid">
 
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
-                </div>
+        <div class="row">
+            <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Star
+            <div class="col-md-1 col-sm-2 col-xs-12">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="active"><a href="#">Home</a></li>
+                    <li role="presentation"><a href="#">Profile</a></li>
+                    <li role="presentation"><a href="#">Messages</a></li>
+                </ul>
             </div>
+
+            <div class="col-md-11 col-sm-10">hello,world</div>
         </div>
     </div>
-</div>
+
 @endsection

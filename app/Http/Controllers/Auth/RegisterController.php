@@ -71,7 +71,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'status' => config('status.users.unactivated')
+            'status' => config('status.user.unactivated')
         ]);
         # 邮件队列发送邮件
         event(new SendEmailEvent($user));

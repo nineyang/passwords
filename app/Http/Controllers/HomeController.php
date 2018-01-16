@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Box;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * @var Box
      */
-    public function __construct()
+    public $box;
+
+    /**
+     * HomeController constructor.
+     * @param Box $box
+     */
+    public function __construct(Box $box)
     {
         $this->middleware('auth');
+        $this->box = $box;
     }
 
     /**
@@ -23,6 +29,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $boxes = $this->box->listByStatus();
+
         return view('home');
     }
 }

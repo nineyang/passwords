@@ -6,9 +6,17 @@
  */
 
 return [
-    'users' => [
+    'user' => [
         'available' => 0,
         'deleted' => 10,
         'unactivated' => 11
+    ],
+    'box' => [
+        'available' => 0,
+        'deleted' => 10,
+    ],
+    'password' => [
+        'available' => 0,
+        'deleted' => 10,
     ]
 ];

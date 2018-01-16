@@ -43,7 +43,7 @@ class User extends BaseModel implements
     {
         $user = $this->find($user_id);
         $user->update([
-            'status' => config('status.users.available')
+            'status' => config('status.user.available')
         ]);
     }
 
