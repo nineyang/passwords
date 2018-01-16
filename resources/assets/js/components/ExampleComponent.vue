@@ -6,7 +6,7 @@
                     <div class="panel-heading">Example Component</div>
 
                     <div class="panel-body">
-                        I'm an example component!
+                        I'm an example component!{{name}}
                     </div>
                 </div>
             </div>
@@ -16,6 +16,7 @@
 
 <script>
     export default {
+        props: ['name'],
         mounted() {
             console.log('Component mounted.')
         }
