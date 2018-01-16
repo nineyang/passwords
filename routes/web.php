@@ -24,3 +24,10 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/email/verify', 'AccountController@verify')->name('email.verify');
 });
 
+Route::group(['prefix' => 'boxes'], function () {
+
+    # 新增
+    Route::post('/', 'BoxController@add');
+
+
+});

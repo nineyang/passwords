@@ -989,6 +989,7 @@ window.Vue = __webpack_require__(35);
 
 Vue.component('example-component', __webpack_require__(38));
 Vue.component('box-li', __webpack_require__(53));
+Vue.component('box-modal', __webpack_require__(56));
 
 var app = new Vue({
   el: '#app'
@@ -43078,7 +43079,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {
+        add: function add() {}
+    }
+});
 
 /***/ }),
 /* 55 */
@@ -43088,22 +43093,350 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { attrs: { role: "presentation" } }, [
-      _c("a", { attrs: { href: "javascript:;" } }, [
+  return _c(
+    "li",
+    {
+      attrs: {
+        role: "presentation",
+        "data-toggle": "modal",
+        "data-target": "#myModal"
+      }
+    },
+    [
+      _c("a", { attrs: { href: "javascript:;" }, on: { click: _vm.add } }, [
         _c("span", {
           staticClass: "glyphicon glyphicon-plus",
           attrs: { "aria-hidden": "true" }
         }),
         _vm._v(" 新增\n    ")
       ])
-    ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-646ee0d8", module.exports)
+  }
+}
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(39)
+/* script */
+var __vue_script__ = __webpack_require__(57)
+/* template */
+var __vue_template__ = __webpack_require__(58)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Box/Modal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ea9106bc", Component.options)
+  } else {
+    hotAPI.reload("data-v-ea9106bc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'types'],
+
+    data: function data() {
+        return {
+            defaultTitle: '新增',
+            description: '',
+            type: '',
+            newTitle: ''
+        };
+    },
+
+    methods: {
+        addBox: function addBox() {
+            var data = {
+                title: this.newTitle,
+                description: this.description,
+                type: this.type
+            };
+            axios.post('/boxes', data).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        }
+    },
+
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "myModal",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "myModalLabel"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _c("div", { staticClass: "modal-header" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "h4",
+              { staticClass: "modal-title", attrs: { id: "myModalLabel" } },
+              [_vm._v(_vm._s(_vm.title ? _vm.title : _vm.defaultTitle))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("form", [
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "title" } },
+                  [_vm._v("Title:")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newTitle,
+                      expression: "newTitle"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    name: "title",
+                    id: "title",
+                    required: "required"
+                  },
+                  domProps: { value: _vm.newTitle },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.newTitle = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "control-label",
+                    attrs: { for: "description" }
+                  },
+                  [_vm._v("Description:")]
+                ),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.description,
+                      expression: "description"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { id: "description", required: "required" },
+                  domProps: { value: _vm.description },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.description = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "type" } },
+                  [_vm._v("Type:")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.type,
+                        expression: "type"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { id: "type", required: "required" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.type = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  _vm._l(_vm.types, function(value, key) {
+                    return _c("option", { domProps: { value: key } }, [
+                      _vm._v(_vm._s(value))
+                    ])
+                  })
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-default",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("Close")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.addBox }
+              },
+              [_vm._v("Save changes")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
@@ -43111,7 +43444,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-646ee0d8", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-ea9106bc", module.exports)
   }
 }
 

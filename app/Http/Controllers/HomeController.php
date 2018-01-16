@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function index()
     {
         $boxes = $this->box->listByStatus();
-
-        return view('home');
+        $types = config('box.type');
+        return view('home', compact('boxes', 'types'));
     }
 }

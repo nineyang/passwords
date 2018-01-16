@@ -50,6 +50,9 @@
                     </li>
 
                     <box-li></box-li>
+
+                    {{--modal框--}}
+                    <box-modal :types="{{json_encode($types)}}"></box-modal>
                 </ul>
             </div>
 
