@@ -40,7 +40,7 @@ class MailVerify extends Mailable implements ShouldQueue
         Cache::set($key, $value, config('redis.verify'));
         return $this->markdown('mails.verify')
             ->with([
-                'actionUrl' => request()->fullUrl() . '?' . http_build_query([
+                'actionUrl' => route('email.verify') . '?' . http_build_query([
                         'uid' => $user_id,
                         'token' => $value
                     ]),

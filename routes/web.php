@@ -20,6 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'user'], function () {
-    Route::get('/email/verity', 'AccountController@verify');
+    Route::get('/email/verify', 'AccountController@verify')->name('email.verify');
 });
 
