@@ -28,7 +28,7 @@ class AccountController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function verify(Request $request)
+    public function verifyEmail(Request $request)
     {
         $key = "{$request->get('uid')}:verify";
         $value = Cache::get($key);

@@ -74,6 +74,19 @@ class BaseModel extends Model
     }
 
     /**
+     * @param Request $request
+     * @return bool
+     */
+    public function updateWithTime(Request $request)
+    {
+        $update = array_merge($request->all(), [
+            'updated_at' => time()
+        ]);
+
+        return $this->update($update);
+    }
+
+    /**
      * @param array $input
      * @param array $output
      * @return array
@@ -84,7 +97,7 @@ class BaseModel extends Model
         $parts = explode('\\', $class_name);
         $value_class = 'App\Values\\' . array_pop($parts);
         if (class_exists($value_class)) {
-            return (new $value_class($input , $output))->handler();
+            return (new $value_class($input, $output))->handler();
         }
         return $output;
     }

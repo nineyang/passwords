@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/welcome', 'WelcomeController@index')->name('home');
 
 Route::group(['prefix' => 'user'], function () {
-    Route::get('/email/verify', 'AccountController@verify')->name('email.verify');
+    Route::get('/email/verify', 'AccountController@verifyEmail')->name('email.verify');
 });
 
 Route::group(['prefix' => 'boxes'], function () {
@@ -30,7 +30,17 @@ Route::group(['prefix' => 'boxes'], function () {
     Route::post('/', 'BoxController@add');
 
     Route::group(['middleware' => 'checkData:box'], function () {
+        # 查看
         Route::get('/{id}', 'BoxController@detail');
+
+        # 更新
+        Route::put('/{id}', 'BoxController@update');
+
+        # 删除
+        Route::delete('/{id}', 'BoxController@delete');
+
+        # 获取
+        Route::get('/{id}/passwords', 'BoxController@passwordList');
 
     });
 
