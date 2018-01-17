@@ -33,13 +33,15 @@ class Controller extends BaseController
 
     /**
      * @param $msg
+     * @param array $data
      * @return array
      */
-    public function success($msg)
+    public function success($data = [] , $msg = 'success')
     {
         return [
             'code' => 0,
-            'message' => $msg
+            'message' => $msg,
+            'data' => $data
         ];
     }
 

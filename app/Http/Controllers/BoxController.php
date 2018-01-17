@@ -44,11 +44,18 @@ class BoxController extends Controller
             return $this->failed($exception->getMessage());
         }
 
-        return $this->success('created success!');
+        return $this->success();
     }
 
-    public function detail(Request $request , $id)
+    /**
+     * @param Request $request
+     * @param $id
+     * @return array
+     */
+    public function detail(Request $request, $id)
     {
+        $box = $request->box->toArray();
 
+        return $this->success($box);
     }
 }
