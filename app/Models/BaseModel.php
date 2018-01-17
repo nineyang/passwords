@@ -9,6 +9,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class BaseModel extends Model
 {
@@ -52,5 +53,22 @@ class BaseModel extends Model
             'status' => $this->getStatus()[$status]
         ];
         return $this->where($condition)->get();
+    }
+
+    /**
+     * @param Request $request
+     * @param string $status
+     * @return $this|Model
+     */
+    public function add(Request $request, $status = 'available')
+    {
+        $add = array_merge($request->all(), [
+            'user_id' => auth()->id(),
+            'status' => $this->getStatus()[$status],
+            'created_at' => time(),
+            'updated_at' => time()
+        ]);
+
+        return $this->create($add);
     }
 }

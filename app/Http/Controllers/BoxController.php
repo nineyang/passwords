@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Box;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class BoxController extends Controller
 {
@@ -23,24 +24,27 @@ class BoxController extends Controller
         $this->box = $box;
     }
 
-
-    public function verify(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $res = $this->verify($request, [
             'title' => 'required|max:64',
             'description' => 'required',
             'type' => 'required',
-            'body' => 'required'
         ]);
-        if ($validator->fails()) {
-            $errors = $validator->errors()->all();
-
+        if (is_array($res) && !empty($res)) {
+            return $this->failed($res);
         }
 
-    }
+        try {
+            $this->box->add($request);
+        } catch (Exception $exception) {
+            return $this->failed($exception->getMessage());
+        }
 
-    public function add(Request $request)
-    {
-        $this->verify($request);
+        return $this->success('created success!');
     }
 }
