@@ -43083,10 +43083,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['title', 'icon', 'id', 'passwords'],
+    data: function data() {
+        return {
+            active: null
+        };
+    },
+
     methods: {
         getInfo: function getInfo() {
-            var url = '/boxex/' + this.id + '/passwords';
+            var _this = this;
+
+            var url = '/boxes/' + this.id + '/passwords';
             axios.get(url, {}).then(function (response) {
+                _this.active = 'active';
                 console.log(response.data);
             }).catch(function (error) {
                 if (error.response) {
@@ -43109,6 +43118,7 @@ var render = function() {
   return _c(
     "li",
     {
+      class: _vm.active,
       attrs: { role: "presentation" },
       on: {
         click: function($event) {

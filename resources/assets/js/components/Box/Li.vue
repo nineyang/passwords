@@ -1,5 +1,5 @@
 <template>
-    <li role="presentation" class="" @click="getInfo()">
+    <li role="presentation" :class="active" @click="getInfo()">
         <a href="#">
             <span :class="'glyphicon glyphicon-'+icon" aria-hidden="true"></span> {{title}}
             <span class="badge" v-show="passwords > 0">{{passwords}}</span>
@@ -10,12 +10,18 @@
 <script>
     export default{
         props: ['title', 'icon', 'id', 'passwords'],
+        data(){
+            return {
+                active: null
+            }
+        },
         methods: {
             getInfo()
             {
-                let url = '/boxex/' + this.id + '/passwords';
+                let url = '/boxes/' + this.id + '/passwords';
                 axios.get(url, {})
                     .then(response => {
+                        this.active = 'active';
                         console.log(response.data);
                     })
                     .catch(error => {
