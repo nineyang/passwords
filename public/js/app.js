@@ -988,6 +988,7 @@ window.Vue = __webpack_require__(35);
  */
 
 Vue.component('example-component', __webpack_require__(38));
+Vue.component('box-add', __webpack_require__(59));
 Vue.component('box-li', __webpack_require__(53));
 Vue.component('box-modal', __webpack_require__(56));
 
@@ -43078,11 +43079,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'icon', 'id', 'passwords'],
     methods: {
-        add: function add() {}
-    }
+        getInfo: function getInfo() {
+            var url = '/boxex/' + this.id + '/passwords';
+            axios.get(url, {}).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        }
+    },
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -43096,19 +43109,35 @@ var render = function() {
   return _c(
     "li",
     {
-      attrs: {
-        role: "presentation",
-        "data-toggle": "modal",
-        "data-target": "#myModal"
+      attrs: { role: "presentation" },
+      on: {
+        click: function($event) {
+          _vm.getInfo()
+        }
       }
     },
     [
-      _c("a", { attrs: { href: "javascript:;" }, on: { click: _vm.add } }, [
+      _c("a", { attrs: { href: "#" } }, [
         _c("span", {
-          staticClass: "glyphicon glyphicon-plus",
+          class: "glyphicon glyphicon-" + _vm.icon,
           attrs: { "aria-hidden": "true" }
         }),
-        _vm._v(" 新增\n    ")
+        _vm._v(" " + _vm._s(_vm.title) + "\n        "),
+        _c(
+          "span",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.passwords > 0,
+                expression: "passwords > 0"
+              }
+            ],
+            staticClass: "badge"
+          },
+          [_vm._v(_vm._s(_vm.passwords))]
+        )
       ])
     ]
   )
@@ -43445,6 +43474,117 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-ea9106bc", module.exports)
+  }
+}
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(39)
+/* script */
+var __vue_script__ = __webpack_require__(60)
+/* template */
+var __vue_template__ = __webpack_require__(61)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Box/Add.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-444e9854", Component.options)
+  } else {
+    hotAPI.reload("data-v-444e9854", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {}
+});
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "li",
+      {
+        attrs: {
+          role: "presentation",
+          "data-toggle": "modal",
+          "data-target": "#myModal"
+        }
+      },
+      [
+        _c("a", { attrs: { href: "javascript:;" } }, [
+          _c("span", {
+            staticClass: "glyphicon glyphicon-plus",
+            attrs: { "aria-hidden": "true" }
+          }),
+          _vm._v(" 新增\n    ")
+        ])
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-444e9854", module.exports)
   }
 }
 

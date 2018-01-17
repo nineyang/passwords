@@ -30,6 +30,9 @@ class HomeController extends Controller
     public function index()
     {
         $boxes = $this->box->listByStatus();
+        if ($boxes){
+            $boxes = $this->box->prepare($boxes->toArray(), ['id', 'title', 'type', 'icon' , 'passwords']);
+        }
         $types = config('box.type');
         return view('home', compact('boxes', 'types'));
     }

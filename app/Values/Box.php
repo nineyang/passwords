@@ -17,4 +17,13 @@ class Box extends BaseValue
     {
         return config('box.icon.' . $this->type);
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return mb_substr($this->title, 0, 5) . '...';
+    }
+
 }

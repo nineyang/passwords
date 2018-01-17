@@ -16,32 +16,14 @@
                             <span class="badge">99+</span>
                         </a>
                     </li>
-                    <li role="presentation" class="">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 工作
-                            <span class="badge">4</span>
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-book" aria-hidden="true"></span> 学习
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> 生活
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-headphones" aria-hidden="true"></span> 娱乐
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-tags" aria-hidden="true"></span> 自定义
-                        </a>
-                    </li>
+
+                    @foreach($boxes as $box)
+
+                        <box-li title="{{$box['title']}}" id="{{$box['id']}}"
+                                passwords="{{$box['passwords']}}" icon="{{$box['icon']}}"></box-li>
+
+                    @endforeach
+
 
                     <li role="presentation">
                         <a href="#">
@@ -49,7 +31,7 @@
                         </a>
                     </li>
 
-                    <box-li></box-li>
+                    <box-add></box-add>
 
                     {{--modal框--}}
                     <box-modal :types="{{json_encode($types)}}"></box-modal>

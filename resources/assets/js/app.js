@@ -16,6 +16,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('box-add', require('./components/Box/Add.vue'));
 Vue.component('box-li', require('./components/Box/Li.vue'));
 Vue.component('box-modal', require('./components/Box/Modal.vue'));
 

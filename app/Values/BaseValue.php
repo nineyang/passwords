@@ -15,6 +15,16 @@ class BaseValue
     public $input;
 
     /**
+     * @var
+     */
+    public $output;
+
+    /**
+     * @var
+     */
+    public $temp;
+
+    /**
      * BaseValue constructor.
      * @param $input
      * @param $output
@@ -23,6 +33,7 @@ class BaseValue
     {
         $this->input = $input;
         $this->output = $output;
+        $this->temp = NULL;
     }
 
     /**
@@ -31,18 +42,28 @@ class BaseValue
     public function handler()
     {
         $return = [];
-        foreach ($this->output as $item) {
+
+        if (count($this->input) == count($this->input, COUNT_RECURSIVE)) {
+            $this->input = [$this->input];
+        }
+        foreach ($this->input as $input) {
+            $temp = [];
+            $this->temp = $input;
+            foreach ($this->output as $item) {
+//            todo 后面可以加参数
 //            if (strrpos($item, ':') !== false) {
 //                list($key, $value) = explode(':', $item);
 //            }
-            $method = 'get' . implode('', array_map('ucfirst', explode('_', $item)));
-            if (method_exists(static::class, $method)) {
-                $return[$item] = $this->{$method}($this->input[$item] ?? NULL);
-            } elseif (isset($this->input[$item])) {
-                $return[$item] = $this->input[$item];
-            } else {
-                $return[$item] = NULL;
+                $method = 'get' . implode('', array_map('ucfirst', explode('_', $item)));
+                if (method_exists(static::class, $method)) {
+                    $temp[$item] = $this->{$method}($input[$item] ?? NULL);
+                } elseif (isset($input[$item])) {
+                    $temp[$item] = $input[$item];
+                } else {
+                    $temp[$item] = NULL;
+                }
             }
+            $return[] = $temp;
         }
 
         return $return;
@@ -72,6 +93,6 @@ class BaseValue
      */
     public function __get($key)
     {
-        return $this->input[$key] ?? NULL;
+        return $this->temp[$key] ?? NULL;
     }
 }
