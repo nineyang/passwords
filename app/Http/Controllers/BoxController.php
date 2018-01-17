@@ -93,4 +93,9 @@ class BoxController extends Controller
 
         return $this->success();
     }
+
+    public function passwordList(Request $request)
+    {
+        return $this->success();
+    }
 }
