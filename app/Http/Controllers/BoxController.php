@@ -55,6 +55,7 @@ class BoxController extends Controller
     public function detail(Request $request, $id)
     {
         $box = $request->box->toArray();
+        $box = $this->box->prepare($box, ['id', 'title', 'description', 'created_at', 'type', 'icon']);
 
         return $this->success($box);
     }

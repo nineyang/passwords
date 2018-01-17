@@ -72,4 +72,20 @@ class BaseModel extends Model
 
         return $this->create($add);
     }
+
+    /**
+     * @param array $input
+     * @param array $output
+     * @return array
+     */
+    public function prepare(array $input, array $output)
+    {
+        $class_name = static::class;
+        $parts = explode('\\', $class_name);
+        $value_class = 'App\Values\\' . array_pop($parts);
+        if (class_exists($value_class)) {
+            return (new $value_class($input , $output))->handler();
+        }
+        return $output;
+    }
 }
