@@ -29,5 +29,10 @@ Route::group(['prefix' => 'boxes'], function () {
     # 新增
     Route::post('/', 'BoxController@add');
 
+    Route::group(['middleware' => 'checkData:box'], function () {
+        Route::get('/{id}', 'BoxController@detail');
+
+    });
+
 
 });

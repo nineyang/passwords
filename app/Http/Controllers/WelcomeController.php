@@ -18,6 +18,5 @@ class WelcomeController extends Controller
 
     public function index()
     {
-        dd($this->user->checkAndGet(27));
     }
 }

@@ -38,7 +38,6 @@ class BoxController extends Controller
         if (is_array($res) && !empty($res)) {
             return $this->failed($res);
         }
-
         try {
             $this->box->add($request);
         } catch (Exception $exception) {
@@ -46,5 +45,10 @@ class BoxController extends Controller
         }
 
         return $this->success('created success!');
+    }
+
+    public function detail(Request $request , $id)
+    {
+
     }
 }

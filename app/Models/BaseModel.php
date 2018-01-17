@@ -34,7 +34,7 @@ class BaseModel extends Model
     {
         $value = static::find($id);
         $status = $this->getStatus();
-        if ($value->status == $status['available']) {
+        if ($value && $value->status == $status['available']) {
             return $value;
         } else {
             return NULL;
@@ -56,6 +56,7 @@ class BaseModel extends Model
     }
 
     /**
+     * 添加数据
      * @param Request $request
      * @param string $status
      * @return $this|Model
