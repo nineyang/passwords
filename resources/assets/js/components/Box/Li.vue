@@ -1,5 +1,5 @@
 <template>
-    <li role="presentation" :class="this.$store.state.defaultSelected == id ? 'active' : ''" @click="getInfo()">
+    <li role="presentation" :class="this.$store.state.selected == id ? 'active' : ''" @click="getInfo()">
         <a href="#">
             <span :class="'glyphicon glyphicon-'+icon" aria-hidden="true"></span> {{title}}
             <span class="badge" v-show="passwords > 0">{{passwords}}</span>
@@ -21,7 +21,9 @@
                 let url = '/boxes/' + this.id + '/passwords';
                 axios.get(url, {})
                     .then(response => {
-                        this.$store.state.defaultSelected = this.id;
+                        console.log('aaa');
+                        this.$store.commit('update' , this.id);
+//                        store.commit('update' , this.id);
                     })
                     .catch(error => {
                         if (error.response) {

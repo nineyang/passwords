@@ -12,14 +12,14 @@ window.Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        defaultSelected: 0
+        selected: 0
     },
     mutations: {
-        // ...
+        update(state, id){
+            state.selected = id;
+        }
     },
-    actions: {
-        // ...
-    }
+    actions: {}
 });
 
 /**

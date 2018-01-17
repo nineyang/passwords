@@ -10,7 +10,7 @@
                     {{--<li role="presentation" class="hide-text">--}}
                     {{--<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>--}}
                     {{--</li>--}}
-                    <li role="presentation" :class="this.$store.state.defaultSelected == 0 ? 'active' : ''">
+                    <li role="presentation" :class="this.$store.state.selected == 0 ? 'active' : ''">
                         <a href="#">
                             <span class="glyphicon glyphicon-time" aria-hidden="true"></span> 未分类
                             <span class="badge">99+</span>

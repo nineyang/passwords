@@ -987,14 +987,14 @@ window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     state: {
-        defaultSelected: 0
+        selected: 0
     },
     mutations: {
-        // ...
+        update: function update(state, id) {
+            state.selected = id;
+        }
     },
-    actions: {
-        // ...
-    }
+    actions: {}
 });
 
 /**
@@ -43112,7 +43112,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var url = '/boxes/' + this.id + '/passwords';
             axios.get(url, {}).then(function (response) {
-                _this.$store.state.defaultSelected = _this.id;
+                console.log('aaa');
+                _this.$store.commit('update', _this.id);
+                //                        store.commit('update' , this.id);
             }).catch(function (error) {
                 if (error.response) {
                     console.log(error.response.data.message);
@@ -43134,7 +43136,7 @@ var render = function() {
   return _c(
     "li",
     {
-      class: this.$store.state.defaultSelected == _vm.id ? "active" : "",
+      class: this.$store.state.selected == _vm.id ? "active" : "",
       attrs: { role: "presentation" },
       on: {
         click: function($event) {
