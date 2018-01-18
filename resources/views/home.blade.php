@@ -17,12 +17,14 @@
                             <box-li title="未定义" id="0"
                                     passwords="{{$unclassified_count}}" icon="time"></box-li>
 
-                            @foreach($boxes as $box)
+                            @if(!empty($boxes))
+                                @foreach($boxes as $box)
 
-                                <box-li title="{{$box['title']}}" id="{{$box['id']}}"
-                                        passwords="{{$box['passwords']}}" icon="{{$box['icon']}}"></box-li>
+                                    <box-li title="{{$box['title']}}" id="{{$box['id']}}"
+                                            passwords="{{$box['passwords']}}" icon="{{$box['icon']}}"></box-li>
 
-                            @endforeach
+                                @endforeach
+                            @endif
 
                             <box-li title="已删除" id="deleted"
                                     passwords="{{$deleted_count}}" icon="trash"></box-li>
@@ -31,6 +33,8 @@
 
                             {{--modal框--}}
                             <box-modal :types="{{json_encode($types)}}"></box-modal>
+
+                            <password-modal></password-modal>
                         </ul>
 
                     </div>

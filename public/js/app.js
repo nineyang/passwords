@@ -1072,8 +1072,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-__webpack_require__(59);
-module.exports = __webpack_require__(60);
+__webpack_require__(58);
+module.exports = __webpack_require__(59);
 
 
 /***/ }),
@@ -1113,12 +1113,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('box-add', __webpack_require__(41));
-Vue.component('box-li', __webpack_require__(44));
-Vue.component('box-modal', __webpack_require__(47));
-Vue.component('password-li', __webpack_require__(50));
-Vue.component('password-modal', __webpack_require__(53));
-Vue.component('home-plus', __webpack_require__(56));
+Vue.component('box-add', __webpack_require__(40));
+Vue.component('box-li', __webpack_require__(43));
+Vue.component('box-modal', __webpack_require__(46));
+Vue.component('password-li', __webpack_require__(49));
+Vue.component('password-modal', __webpack_require__(52));
+Vue.component('home-plus', __webpack_require__(55));
 
 var app = new Vue({
     el: '#app',
@@ -43853,16 +43853,15 @@ var index_esm = {
 
 
 /***/ }),
-/* 40 */,
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(42)
+var __vue_script__ = __webpack_require__(41)
 /* template */
-var __vue_template__ = __webpack_require__(43)
+var __vue_template__ = __webpack_require__(42)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -43901,7 +43900,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43920,7 +43919,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -43965,15 +43964,15 @@ if (false) {
 }
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(45)
+var __vue_script__ = __webpack_require__(44)
 /* template */
-var __vue_template__ = __webpack_require__(46)
+var __vue_template__ = __webpack_require__(45)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44012,7 +44011,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44055,7 +44054,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -44110,15 +44109,15 @@ if (false) {
 }
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(48)
+var __vue_script__ = __webpack_require__(47)
 /* template */
-var __vue_template__ = __webpack_require__(49)
+var __vue_template__ = __webpack_require__(48)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44157,7 +44156,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44236,7 +44235,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -44437,15 +44436,15 @@ if (false) {
 }
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(51)
+var __vue_script__ = __webpack_require__(50)
 /* template */
-var __vue_template__ = __webpack_require__(52)
+var __vue_template__ = __webpack_require__(51)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44484,7 +44483,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44517,7 +44516,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -44601,15 +44600,15 @@ if (false) {
 }
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(54)
+var __vue_script__ = __webpack_require__(53)
 /* template */
-var __vue_template__ = __webpack_require__(55)
+var __vue_template__ = __webpack_require__(54)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44648,7 +44647,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44691,11 +44690,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'types'],
+    data: function data() {
+        return {
+            defaultTitle: '新增Password',
+            description: '',
+            type: '',
+            newTitle: '',
+            url: '',
+            account: '',
+            password: '',
+            safety_level: 1
+        };
+    },
+
+    methods: {
+        addMessage: function addMessage() {}
+    },
+    mounted: function mounted() {
+        Vue.nextTick(function () {
+            $("#safety_level").slider({
+                precision: 2,
+                value: 8.115
+            });
+
+            var slider = new Slider("#safety_level", {
+                precision: 2,
+                value: 8.115
+            });
+        });
+    }
+});
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -44707,10 +44758,10 @@ var render = function() {
     {
       staticClass: "modal fade",
       attrs: {
-        id: "myModal",
+        id: "passwordModal",
         tabindex: "-1",
         role: "dialog",
-        "aria-labelledby": "myModalLabel"
+        "aria-labelledby": "passwordModalLabel"
       }
     },
     [
@@ -44721,13 +44772,159 @@ var render = function() {
             _vm._v(" "),
             _c(
               "h4",
-              { staticClass: "modal-title", attrs: { id: "myModalLabel" } },
+              {
+                staticClass: "modal-title",
+                attrs: { id: "passwordModalLabel" }
+              },
               [_vm._v(_vm._s(_vm.title ? _vm.title : _vm.defaultTitle))]
             )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("form", [
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "url" } },
+                  [_vm._v("Url:")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.url,
+                      expression: "url"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "url",
+                    name: "url",
+                    id: "url",
+                    required: "required"
+                  },
+                  domProps: { value: _vm.url },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.url = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "account" } },
+                  [_vm._v("Account:")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account,
+                      expression: "account"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    name: "account",
+                    id: "account",
+                    required: "required"
+                  },
+                  domProps: { value: _vm.account },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.account = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "password" } },
+                  [_vm._v("Password:")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.account,
+                      expression: "account"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "password",
+                    name: "password",
+                    id: "password",
+                    required: "required"
+                  },
+                  domProps: { value: _vm.account },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.account = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "control-label",
+                    attrs: { for: "safety_level" }
+                  },
+                  [_vm._v("Password:")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.safety_level,
+                      expression: "safety_level"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    name: "safety_level",
+                    id: "safety_level",
+                    required: "required"
+                  },
+                  domProps: { value: _vm.safety_level },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.safety_level = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c(
                   "label",
@@ -44857,7 +45054,7 @@ var render = function() {
               {
                 staticClass: "btn btn-primary",
                 attrs: { type: "button" },
-                on: { click: _vm.addBox }
+                on: { click: _vm.addMessage }
               },
               [_vm._v("Save changes")]
             )
@@ -44896,15 +45093,15 @@ if (false) {
 }
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(57)
+var __vue_script__ = __webpack_require__(56)
 /* template */
-var __vue_template__ = __webpack_require__(58)
+var __vue_template__ = __webpack_require__(57)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44943,7 +45140,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44994,7 +45191,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45018,15 +45215,19 @@ var render = function() {
           attrs: {
             type: "button",
             "aria-label": "Left Align",
-            "data-toggle": "tooltip",
-            "data-placement": "top",
-            title: "添加密码记录"
+            "data-toggle": "modal",
+            "data-target": "#passwordModal"
           }
         },
         [
           _c("span", {
             staticClass: "glyphicon glyphicon-plus",
-            attrs: { "aria-hidden": "true" }
+            attrs: {
+              "aria-hidden": "true",
+              "data-toggle": "tooltip",
+              "data-placement": "top",
+              title: "添加密码记录"
+            }
           })
         ]
       ),
@@ -45091,13 +45292,13 @@ if (false) {
 }
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

@@ -52,7 +52,7 @@ class BaseModel extends Model
             'user_id' => auth()->id(),
             'status' => $this->getStatus()[$status]
         ];
-        return $this->where($condition)->get();
+        return $this->where($condition)->get()->toArray();
     }
 
     /**

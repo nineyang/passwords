@@ -43,7 +43,7 @@ class HomeController extends Controller
         # 获取已经删除的数据
         $deleted_count = $this->password->countByStatus('deleted');
         if ($boxes) {
-            $boxes = $this->box->prepare($boxes->toArray(), ['id', 'title', 'type', 'icon', 'passwords']);
+            $boxes = $this->box->prepare($boxes, ['id', 'title', 'type', 'icon', 'passwords']);
         }
         $types = config('box.type');
         return view('home', compact('boxes', 'types', 'unclassified_count' , 'deleted_count'));
