@@ -23,7 +23,10 @@ class Box extends BaseValue
      */
     public function getTitle()
     {
-        return mb_substr($this->title, 0, 5) . '...';
+        if (mb_strlen($this->title) > 5) {
+            return mb_substr($this->title, 0, 5) . '...';
+        }
+        return $this->title;
     }
 
 }

@@ -32,6 +32,18 @@ class BoxPolicy
     }
 
     /**
+     * Determine whether the user can create boxes.
+     *
+     * @param  \App\Models\User $user
+     * @return mixed
+     */
+    public function createPassword(User $user , Box $box)
+    {
+        return $user->status === config('status.user.available')
+            && $box->status === config('status.box.available');
+    }
+
+    /**
      * Determine whether the user can update the box.
      *
      * @param  \App\Models\User $user

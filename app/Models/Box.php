@@ -17,7 +17,7 @@ class Box extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'description', 'sort', 'status', 'type', 'created_at', 'updated_at'
+        'user_id', 'title', 'description', 'sort', 'status', 'type', 'created_at', 'updated_at', 'passwords'
     ];
 
     /**

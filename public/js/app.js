@@ -1104,7 +1104,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
             state.selected = id;
         }
     },
-    actions: {}
+    actions: {},
+    getters: {
+        selected: function selected(state) {
+            return state.selected;
+        }
+    }
 });
 
 /**
@@ -44040,7 +44045,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var url = '/boxes/' + this.id + '/passwords';
             axios.get(url, {}).then(function (response) {
-                console.log('aaa');
                 _this.$store.commit('update', _this.id);
                 //                        store.commit('update' , this.id);
             }).catch(function (error) {
@@ -44229,9 +44233,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
 
-    mounted: function mounted() {
-        console.log(this.$store.state.count);
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -44725,6 +44727,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['pwdTitle', 'boxes', 'safety_levels'],
@@ -44733,7 +44737,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             defaultTitle: '新增Password',
             pwdDescription: '',
-            boxId: 0,
+            boxId: this.$store.state.selected,
             newTitle: '',
             url: '',
             account: '',
@@ -44743,9 +44747,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        addMessage: function addMessage() {}
+        addMessage: function addMessage() {
+            var data = {
+                title: this.newTitle,
+                description: this.pwdDescription,
+                account: this.account,
+                password: this.password,
+                safetyLevel: this.safetyLevel,
+                boxId: this.boxId,
+                url: this.url
+            };
+            axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        }
     },
-    mounted: function mounted() {}
+    mounted: function mounted() {},
+
+    computed: {
+        selected: function selected() {
+            return this.$store.state.selected;
+        }
+    },
+    watch: {
+        selected: function selected(newVal, oldVal) {
+            this.boxId = newVal;
+        }
+    }
 });
 
 /***/ }),
@@ -44868,8 +44900,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.account,
-                        expression: "account"
+                        value: _vm.password,
+                        expression: "password"
                       }
                     ],
                     staticClass: "form-control",
@@ -44879,13 +44911,13 @@ var render = function() {
                       id: "password",
                       required: "required"
                     },
-                    domProps: { value: _vm.account },
+                    domProps: { value: _vm.password },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.account = $event.target.value
+                        _vm.password = $event.target.value
                       }
                     }
                   }),
@@ -44946,10 +44978,24 @@ var render = function() {
                     return _c("div", [
                       _c("label", { staticClass: "radio-inline" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.safetyLevel,
+                              expression: "safetyLevel"
+                            }
+                          ],
                           attrs: { type: "radio", name: "safetyLevel" },
                           domProps: {
                             value: key,
-                            checked: _vm.safetyLevel == key
+                            checked: _vm.safetyLevel == key,
+                            checked: _vm._q(_vm.safetyLevel, key)
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.safetyLevel = key
+                            }
                           }
                         }),
                         _vm._v(
@@ -45034,11 +45080,7 @@ var render = function() {
                     }
                   },
                   [
-                    _c(
-                      "option",
-                      { attrs: { value: "0", selected: "selected" } },
-                      [_vm._v("未分类")]
-                    ),
+                    _c("option", { attrs: { value: "0" } }, [_vm._v("未分类")]),
                     _vm._v(" "),
                     _vm._l(_vm.boxes, function(box) {
                       return _c("option", { domProps: { value: box.id } }, [

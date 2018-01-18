@@ -21,7 +21,6 @@
                 let url = '/boxes/' + this.id + '/passwords';
                 axios.get(url, {})
                     .then(response => {
-                        console.log('aaa');
                         this.$store.commit('update' , this.id);
 //                        store.commit('update' , this.id);
                     })

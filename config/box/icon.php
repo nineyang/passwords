@@ -10,5 +10,6 @@ return [
     2 => 'book',
     3 => 'camera',
     4 => 'headphones',
-    5 => 'tags'
+    5 => 'tags',
+    6 => 'time'
 ];

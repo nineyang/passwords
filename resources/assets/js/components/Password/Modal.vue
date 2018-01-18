@@ -22,7 +22,8 @@
                         <div class="form-group">
                             <label for="password" class="control-label">Password:</label>
                             <div class="input-group">
-                                <input type="password" name="password" class="form-control" id="password" v-model="account"
+                                <input type="password" name="password" class="form-control" id="password"
+                                       v-model="password"
                                        required="required">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button">
@@ -41,7 +42,8 @@
                             <label for="safetyLevel" class="control-label">SafetyLevel:</label>
                             <div v-for="item , key in safety_levels">
                                 <label class="radio-inline">
-                                    <input type="radio" name="safetyLevel" :value="key" :checked="safetyLevel==key">
+                                    <input v-model="safetyLevel" type="radio" name="safetyLevel" v-bind:value="key"
+                                           :checked="safetyLevel==key">
                                     {{item}}
                                 </label>
                             </div>
@@ -56,7 +58,7 @@
                         <div class="form-group">
                             <label for="boxId" class="control-label">Type:</label>
                             <select class="form-control" v-model="boxId" id="boxId" required="required">
-                                <option value="0" selected="selected">未分类</option>
+                                <option value="0">未分类</option>
                                 <option v-for="box in boxes" v-bind:value="box.id">{{box.title}}</option>
                             </select>
                         </div>
@@ -79,7 +81,7 @@
             return {
                 defaultTitle: '新增Password',
                 pwdDescription: '',
-                boxId: 0,
+                boxId: this.$store.state.selected,
                 newTitle: '',
                 url: '',
                 account: '',
@@ -89,11 +91,38 @@
         },
         methods: {
             addMessage(){
-
+                let data = {
+                    title: this.newTitle,
+                    description: this.pwdDescription,
+                    account: this.account,
+                    password: this.password,
+                    safetyLevel: this.safetyLevel,
+                    boxId: this.boxId,
+                    url: this.url
+                };
+                axios.post('/boxes/' + this.boxId + '/passwords', data)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                        }
+                    });
             }
         },
         mounted(){
 
+        },
+        computed: {
+            selected () {
+                return this.$store.state.selected;
+            }
+        },
+        watch: {
+            selected (newVal, oldVal) {
+                this.boxId = newVal;
+            }
         }
     }
 </script>

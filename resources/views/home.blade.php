@@ -14,8 +14,8 @@
                             {{--<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>--}}
                             {{--</li>--}}
 
-                            <box-li title="未分类" id="0"
-                                    passwords="{{$unclassified_count}}" icon="time"></box-li>
+                            {{--<box-li title="未分类" id="0"--}}
+                                    {{--passwords="{{$unclassified_count}}" icon="time"></box-li>--}}
 
                             @if(!empty($boxes))
                                 @foreach($boxes as $box)

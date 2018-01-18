@@ -31,20 +31,6 @@ class Password extends BaseModel
     ];
 
     /**
-     * 获取未分类的数量
-     * @return int
-     */
-    public function getUnClassfiedCount()
-    {
-        $condition = [
-            'user_id' => auth()->id(),
-            'box_id' => 0
-        ];
-
-        return $this->where($condition)->count();
-    }
-
-    /**
      * @param $box_id
      * @param $status
      * @return \Illuminate\Database\Eloquent\Collection|static[]

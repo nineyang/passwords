@@ -45,7 +45,7 @@ class BoxController extends Controller
             return $this->failed($res);
         }
         try {
-            $this->box->add($request);
+            $this->box->add($request->all());
         } catch (Exception $exception) {
             return $this->failed($exception->getMessage());
         }

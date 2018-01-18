@@ -37,8 +37,6 @@ class HomeController extends Controller
     public function index()
     {
         $boxes = $this->box->listByStatus();
-        # 获取未定义的数据的数量
-        $unclassified_count = $this->password->getUnClassfiedCount();
 
         # 获取已经删除的数据
         $deleted_count = $this->password->countByStatus('deleted');
@@ -46,6 +44,9 @@ class HomeController extends Controller
             $boxes = $this->box->prepare($boxes, ['id', 'title', 'type', 'icon', 'passwords']);
         }
         $types = config('box.type');
-        return view('home', compact('boxes', 'types', 'unclassified_count' , 'deleted_count'));
+        if (isset($types[6])) {
+            unset($types[6]);
+        }
+        return view('home', compact('boxes', 'types', 'unclassified_count', 'deleted_count'));
     }
 }

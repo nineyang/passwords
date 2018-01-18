@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Box;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -32,22 +33,30 @@ class AccountController extends Controller
     {
         $key = "{$request->get('uid')}:verify";
         $value = Cache::get($key);
-        $user = $this->user->checkAndGet($request->get('uid'));
+        $user = $this->user->find($request->get('uid'));
         if ($user) {
-            $title = 'Success';
-            $info = 'It doesn\'t need to be activated again';
-        } else {
-            if ($value == $request->get('token')) {
+            if ($user->status == config('status.user.available')) {
+                $title = 'Success';
+                $info = 'It doesn\'t need to be activated again';
+            } elseif ($value == $request->get('token')) {
+                $this->user->activate($request->get('uid'));
+                Cache::delete($value);
+                # 创建一个未分类的默认盒子
+                (new Box())->add([
+                    'title' => '默认',
+                    'type' => 6,
+                    'description' => '默认',
+                    'sort' => 1
+                ]);
                 $title = 'Success';
                 $info = 'Activation successful';
             } else {
                 $title = 'Failed';
                 $info = 'Activation failed';
             }
+        } else {
+            abort(404);
         }
-
-        $this->user->activate($request->get('uid'));
-        Cache::delete($value);
 
         return view('mails.verify_result', compact('title', 'info'));
     }

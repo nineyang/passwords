@@ -44,15 +44,16 @@ class BaseModel extends Model
     /**
      * 获取全部正常数据
      * @param string $status
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @param string $order
+     * @return array
      */
-    public function listByStatus($status = 'available')
+    public function listByStatus($status = 'available' , $order = 'sort')
     {
         $condition = [
             'user_id' => auth()->id(),
             'status' => $this->getStatus()[$status]
         ];
-        return $this->where($condition)->get()->toArray();
+        return $this->where($condition)->orderByDesc($order)->get()->toArray();
     }
 
     /**
@@ -71,13 +72,13 @@ class BaseModel extends Model
 
     /**
      * 添加数据
-     * @param Request $request
+     * @param array $params
      * @param string $status
      * @return $this|Model
      */
-    public function add(Request $request, $status = 'available')
+    public function add($params = [], $status = 'available')
     {
-        $add = array_merge($request->all(), [
+        $add = array_merge($params, [
             'user_id' => auth()->id(),
             'status' => $this->getStatus()[$status],
             'created_at' => time(),

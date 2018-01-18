@@ -19,7 +19,12 @@ const store = new Vuex.Store({
             state.selected = id;
         }
     },
-    actions: {}
+    actions: {},
+    getters: {
+        selected (state) {
+            return state.selected;
+        }
+    }
 });
 
 /**
