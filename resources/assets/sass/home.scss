@@ -1,13 +1,26 @@
 .add-plus {
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.12), 0 6px 6px 0 rgba(0, 0, 0, 0.24);
   position: absolute;
-  top: 90%;
+  top: 76%;
   left: 94%;
+  height: 12em;
+}
+
+.add-plus-button {
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.12), 0 6px 6px 0 rgba(0, 0, 0, 0.24);
   border-radius: 1.2em;
+  position: relative;
 
   span {
     font-size: 1.2em;
     padding: 0.8em;
   }
+}
 
+.tools {
+  height : 7.8em;
+  button {
+    display: block;
+    margin-left: 20%;
+    margin-bottom: 0.5em;
+  }
 }
