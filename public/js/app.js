@@ -44711,38 +44711,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['title', 'types'],
+    props: ['pwdTitle', 'boxes', 'safety_levels'],
+    components: {},
     data: function data() {
         return {
             defaultTitle: '新增Password',
-            description: '',
-            type: '',
+            pwdDescription: '',
+            boxId: 0,
             newTitle: '',
             url: '',
             account: '',
             password: '',
-            safety_level: 1
+            safetyLevel: 1
         };
     },
 
     methods: {
         addMessage: function addMessage() {}
     },
-    mounted: function mounted() {
-        Vue.nextTick(function () {
-            $("#safety_level").slider({
-                precision: 2,
-                value: 8.115
-            });
-
-            var slider = new Slider("#safety_level", {
-                precision: 2,
-                value: 8.115
-            });
-        });
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -44776,7 +44779,7 @@ var render = function() {
                 staticClass: "modal-title",
                 attrs: { id: "passwordModalLabel" }
               },
-              [_vm._v(_vm._s(_vm.title ? _vm.title : _vm.defaultTitle))]
+              [_vm._v(_vm._s(_vm.pwdTitle ? _vm.pwdTitle : _vm.defaultTitle))]
             )
           ]),
           _vm._v(" "),
@@ -44859,76 +44862,42 @@ var render = function() {
                   [_vm._v("Password:")]
                 ),
                 _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account,
-                      expression: "account"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "password",
-                    name: "password",
-                    id: "password",
-                    required: "required"
-                  },
-                  domProps: { value: _vm.account },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                _c("div", { staticClass: "input-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.account,
+                        expression: "account"
                       }
-                      _vm.account = $event.target.value
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "password",
+                      name: "password",
+                      id: "password",
+                      required: "required"
+                    },
+                    domProps: { value: _vm.account },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.account = $event.target.value
+                      }
                     }
-                  }
-                })
+                  }),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c(
                   "label",
-                  {
-                    staticClass: "control-label",
-                    attrs: { for: "safety_level" }
-                  },
-                  [_vm._v("Password:")]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.safety_level,
-                      expression: "safety_level"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    name: "safety_level",
-                    id: "safety_level",
-                    required: "required"
-                  },
-                  domProps: { value: _vm.safety_level },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.safety_level = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "title" } },
+                  { staticClass: "control-label", attrs: { for: "pwdTitle" } },
                   [_vm._v("Title:")]
                 ),
                 _vm._v(" "),
@@ -44944,8 +44913,8 @@ var render = function() {
                   staticClass: "form-control",
                   attrs: {
                     type: "text",
-                    name: "title",
-                    id: "title",
+                    name: "pwdTitle",
+                    id: "pwdTitle",
                     required: "required"
                   },
                   domProps: { value: _vm.newTitle },
@@ -44960,12 +44929,47 @@ var render = function() {
                 })
               ]),
               _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "control-label",
+                      attrs: { for: "safetyLevel" }
+                    },
+                    [_vm._v("SafetyLevel:")]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.safety_levels, function(item, key) {
+                    return _c("div", [
+                      _c("label", { staticClass: "radio-inline" }, [
+                        _c("input", {
+                          attrs: { type: "radio", name: "safetyLevel" },
+                          domProps: {
+                            value: key,
+                            checked: _vm.safetyLevel == key
+                          }
+                        }),
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(item) +
+                            "\n                            "
+                        )
+                      ])
+                    ])
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c(
                   "label",
                   {
                     staticClass: "control-label",
-                    attrs: { for: "description" }
+                    attrs: { for: "pwdDescription" }
                   },
                   [_vm._v("Description:")]
                 ),
@@ -44975,19 +44979,19 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.description,
-                      expression: "description"
+                      value: _vm.pwdDescription,
+                      expression: "pwdDescription"
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { id: "description", required: "required" },
-                  domProps: { value: _vm.description },
+                  attrs: { id: "pwdDescription", required: "required" },
+                  domProps: { value: _vm.pwdDescription },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.description = $event.target.value
+                      _vm.pwdDescription = $event.target.value
                     }
                   }
                 })
@@ -44996,7 +45000,7 @@ var render = function() {
               _c("div", { staticClass: "form-group" }, [
                 _c(
                   "label",
-                  { staticClass: "control-label", attrs: { for: "type" } },
+                  { staticClass: "control-label", attrs: { for: "boxId" } },
                   [_vm._v("Type:")]
                 ),
                 _vm._v(" "),
@@ -45007,12 +45011,12 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.type,
-                        expression: "type"
+                        value: _vm.boxId,
+                        expression: "boxId"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { id: "type", required: "required" },
+                    attrs: { id: "boxId", required: "required" },
                     on: {
                       change: function($event) {
                         var $$selectedVal = Array.prototype.filter
@@ -45023,17 +45027,26 @@ var render = function() {
                             var val = "_value" in o ? o._value : o.value
                             return val
                           })
-                        _vm.type = $event.target.multiple
+                        _vm.boxId = $event.target.multiple
                           ? $$selectedVal
                           : $$selectedVal[0]
                       }
                     }
                   },
-                  _vm._l(_vm.types, function(value, key) {
-                    return _c("option", { domProps: { value: key } }, [
-                      _vm._v(_vm._s(value))
-                    ])
-                  })
+                  [
+                    _c(
+                      "option",
+                      { attrs: { value: "0", selected: "selected" } },
+                      [_vm._v("未分类")]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.boxes, function(box) {
+                      return _c("option", { domProps: { value: box.id } }, [
+                        _vm._v(_vm._s(box.title))
+                      ])
+                    })
+                  ],
+                  2
                 )
               ])
             ])
@@ -45081,6 +45094,23 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-btn" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-default", attrs: { type: "button" } },
+        [
+          _c("span", {
+            staticClass: "glyphicon glyphicon-eye-open",
+            attrs: { "aria-hidden": "true" }
+          })
+        ]
+      )
+    ])
   }
 ]
 render._withStripped = true

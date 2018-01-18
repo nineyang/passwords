@@ -14,7 +14,7 @@
                             {{--<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>--}}
                             {{--</li>--}}
 
-                            <box-li title="未定义" id="0"
+                            <box-li title="未分类" id="0"
                                     passwords="{{$unclassified_count}}" icon="time"></box-li>
 
                             @if(!empty($boxes))
@@ -34,7 +34,8 @@
                             {{--modal框--}}
                             <box-modal :types="{{json_encode($types)}}"></box-modal>
 
-                            <password-modal></password-modal>
+                            <password-modal :safety_levels="{{json_encode(config('password.level'))}}"
+                                            :boxes="{{json_encode($boxes)}}"></password-modal>
                         </ul>
 
                     </div>

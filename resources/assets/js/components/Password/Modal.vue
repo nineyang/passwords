@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="passwordModalLabel">{{title ? title : defaultTitle}}</h4>
+                    <h4 class="modal-title" id="passwordModalLabel">{{pwdTitle ? pwdTitle : defaultTitle}}</h4>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -21,29 +21,43 @@
                         </div>
                         <div class="form-group">
                             <label for="password" class="control-label">Password:</label>
-                            <input type="password" name="password" class="form-control" id="password" v-model="account"
-                                   required="required">
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" id="password" v-model="account"
+                                       required="required">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                    </button>
+                                  </span>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="safety_level" class="control-label">Password:</label>
-                            <input type="text" name="safety_level" class="form-control" id="safety_level"
-                                   v-model="safety_level"
+                            <label for="pwdTitle" class="control-label">Title:</label>
+                            <input type="text" name="pwdTitle" class="form-control" id="pwdTitle" v-model="newTitle"
                                    required="required">
                         </div>
+
                         <div class="form-group">
-                            <label for="title" class="control-label">Title:</label>
-                            <input type="text" name="title" class="form-control" id="title" v-model="newTitle"
-                                   required="required">
+                            <label for="safetyLevel" class="control-label">SafetyLevel:</label>
+                            <div v-for="item , key in safety_levels">
+                                <label class="radio-inline">
+                                    <input type="radio" name="safetyLevel" :value="key" :checked="safetyLevel==key">
+                                    {{item}}
+                                </label>
+                            </div>
+
                         </div>
+
                         <div class="form-group">
-                            <label for="description" class="control-label">Description:</label>
-                            <textarea class="form-control" id="description" v-model="description"
+                            <label for="pwdDescription" class="control-label">Description:</label>
+                            <textarea class="form-control" id="pwdDescription" v-model="pwdDescription"
                                       required="required"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="type" class="control-label">Type:</label>
-                            <select class="form-control" v-model="type" id="type" required="required">
-                                <option v-for="value , key in types" v-bind:value="key">{{value}}</option>
+                            <label for="boxId" class="control-label">Type:</label>
+                            <select class="form-control" v-model="boxId" id="boxId" required="required">
+                                <option value="0" selected="selected">未分类</option>
+                                <option v-for="box in boxes" v-bind:value="box.id">{{box.title}}</option>
                             </select>
                         </div>
                     </form>
@@ -59,17 +73,18 @@
 
 <script>
     export default{
-        props: ['title', 'types'],
+        props: ['pwdTitle', 'boxes', 'safety_levels'],
+        components: {},
         data(){
             return {
                 defaultTitle: '新增Password',
-                description: '',
-                type: '',
+                pwdDescription: '',
+                boxId: 0,
                 newTitle: '',
                 url: '',
                 account: '',
                 password: '',
-                safety_level: 1
+                safetyLevel: 1,
             }
         },
         methods: {
@@ -78,17 +93,7 @@
             }
         },
         mounted(){
-            Vue.nextTick(() => {
-                $("#safety_level").slider({
-                    precision: 2,
-                    value: 8.115
-                });
 
-                var slider = new Slider("#safety_level", {
-                    precision: 2,
-                    value: 8.115 
-                });
-            });
         }
     }
 </script>
