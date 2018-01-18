@@ -16,7 +16,8 @@ class CheckData
     public function handle($request, Closure $next, $model)
     {
         $model_class = 'App\Models\\' . ucfirst($model);
-        $data = (new $model_class)->checkAndGet($request->id);
+        $id = substr($model, 0, 1) . '_id';
+        $data = (new $model_class)->checkAndGet($request->{$id});
         if (!$data) {
             return response()->json([
                 'code' => 0,

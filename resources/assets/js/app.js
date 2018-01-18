@@ -28,10 +28,12 @@ const store = new Vuex.Store({
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('box-add', require('./components/Box/Add.vue'));
 Vue.component('box-li', require('./components/Box/Li.vue'));
 Vue.component('box-modal', require('./components/Box/Modal.vue'));
+Vue.component('password-li', require('./components/Password/Li.vue'));
+Vue.component('password-modal', require('./components/Password/Modal.vue'));
+Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
 const app = new Vue({
     el: '#app',

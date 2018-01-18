@@ -18,7 +18,7 @@ class BaseModel extends Model
      * 获取状态信息
      * @return \Illuminate\Config\Repository|mixed
      */
-    protected function getStatus()
+    public function getStatus()
     {
         $class_name = static::class;
         $parts = explode('\\', $class_name);
@@ -53,6 +53,20 @@ class BaseModel extends Model
             'status' => $this->getStatus()[$status]
         ];
         return $this->where($condition)->get();
+    }
+
+    /**
+     * 获取数据的统计数量
+     * @param string $status
+     * @return int
+     */
+    public function countByStatus($status = 'available')
+    {
+        $condition = [
+            'user_id' => auth()->id(),
+            'status' => $this->getStatus()[$status]
+        ];
+        return $this->where($condition)->count();
     }
 
     /**

@@ -24,6 +24,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/email/verify', 'AccountController@verifyEmail')->name('email.verify');
 });
 
+## 如需使用checkData，传递的参数需要按照model的第一个字母+id的形式，例如b_id
 Route::group(['prefix' => 'boxes'], function () {
 
     # 新增
@@ -31,16 +32,25 @@ Route::group(['prefix' => 'boxes'], function () {
 
     Route::group(['middleware' => 'checkData:box'], function () {
         # 查看
-        Route::get('/{id}', 'BoxController@detail');
-
+        Route::get('/{b_id}', 'BoxController@detail');
         # 更新
-        Route::put('/{id}', 'BoxController@update');
-
+        Route::put('/{b_id}', 'BoxController@update');
         # 删除
-        Route::delete('/{id}', 'BoxController@delete');
+        Route::delete('/{b_id}', 'BoxController@delete');
 
-        # 获取
-        Route::get('/{id}/passwords', 'BoxController@passwordList');
+        # 获取所有passwords
+        Route::get('/{b_id}/passwords', 'PasswordController@passwordList');
+        # 新增password
+        Route::post('/{b_id}/passwords', 'PasswordController@add');
+
+        Route::group(['middleware' => 'checkData:password'], function () {
+            # 查看
+            Route::get('/{b_id}/password/{p_id}', 'PasswordController@detail');
+            # 更新
+            Route::put('/{b_id}/password/{p_id}', 'PasswordController@update');
+            # 删除
+            Route::delete('/{b_id}/password/{p_id}', 'PasswordController@delete');
+        });
 
     });
 
