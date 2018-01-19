@@ -11,7 +11,8 @@
                             <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 编辑
                         </button>
                         <button type="button" class="btn btn-default btn-xs">
-                            <a :href="item.url" target="_blank" style="text-decoration: none;color:#636b6f">
+                            <a :href="item.url" target="_blank" class="none-style-a"
+                               v-tooltip:bottom="item.url">
                                 <span class="glyphicon glyphicon-share-alt"
                                       aria-hidden="true"></span> 跳转
                             </a>

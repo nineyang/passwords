@@ -45598,6 +45598,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {}
@@ -45662,10 +45663,16 @@ var render = function() {
                   _c(
                     "a",
                     {
-                      staticStyle: {
-                        "text-decoration": "none",
-                        color: "#636b6f"
-                      },
+                      directives: [
+                        {
+                          name: "tooltip",
+                          rawName: "v-tooltip:bottom",
+                          value: item.url,
+                          expression: "item.url",
+                          arg: "bottom"
+                        }
+                      ],
+                      staticClass: "none-style-a",
                       attrs: { href: item.url, target: "_blank" }
                     },
                     [

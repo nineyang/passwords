@@ -13,7 +13,7 @@ window.Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         selected: 0,
-        passwordList: []
+        passwordList: [],
     },
     mutations: {
         updateSelected(state, id){
