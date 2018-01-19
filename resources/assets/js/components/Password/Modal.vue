@@ -58,7 +58,6 @@
                         <div class="form-group">
                             <label for="boxId" class="control-label">Type:</label>
                             <select class="form-control" v-model="boxId" id="boxId" required="required">
-                                <option value="0">未分类</option>
                                 <option v-for="box in boxes" v-bind:value="box.id">{{box.title}}</option>
                             </select>
                         </div>

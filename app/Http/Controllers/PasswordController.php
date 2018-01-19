@@ -56,13 +56,12 @@ class PasswordController extends Controller
         }
 
         try {
-            #todo 这里密码存储的问题需要思考一下
             $this->password->add([
                 'title' => $request->get('title'),
                 'description' => $request->get('description'),
                 'url' => $request->get('url'),
                 'account' => $request->get('account'),
-                'password' => $request->get('password'),
+                'password' => encrypt($request->get('password')),
                 'box_id' => $request->get('boxId'),
                 'safety_level' => $request->get('safetyLevel'),
             ]);
@@ -88,7 +87,7 @@ class PasswordController extends Controller
         }
         $passwords = $this->password->getPasswordList($b_id);
         if ($passwords) {
-            $passwords = $this->password->prepare($passwords, ['id', 'title']);
+            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url' , 'subAccount']);
         }
 
         return $this->success($passwords);

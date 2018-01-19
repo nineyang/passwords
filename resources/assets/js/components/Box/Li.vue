@@ -21,8 +21,10 @@
                 let url = '/boxes/' + this.id + '/passwords';
                 axios.get(url, {})
                     .then(response => {
-                        this.$store.commit('update' , this.id);
-//                        store.commit('update' , this.id);
+                        // 更新selected
+                        this.$store.commit('updateSelected' , this.id);
+                        // 更新list
+                        this.$store.commit('updatePasswordList' , response.data.data);
                     })
                     .catch(error => {
                         if (error.response) {
