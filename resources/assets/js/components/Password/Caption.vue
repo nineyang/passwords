@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="col-sm-2 col-md-2" v-for="item in this.$store.state.passwordList">
+        <div class="col-sm-3 col-md-3" v-for="item in this.$store.state.passwordList">
             <div class="thumbnail">
                 <div class="caption">
                     <h4 v-tooltip:right="item.title">{{item.title}}</h4>
                     <p v-tooltip:right="item.account">{{item.subAccount}}</p>
 
                     <p class="pull-right">
-                        <button type="button" class="btn btn-default btn-xs">
+                        <button @click="editPassword" type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 编辑
                         </button>
                         <button type="button" class="btn btn-default btn-xs">
@@ -31,9 +31,20 @@
 </template>
 
 <script>
+
     export default{
         mounted(){
 
         },
+
+        methods: {
+            editPassword(){
+                console.log('aaaa');
+                Vue.nextTick(() => {
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                });
+            }
+        }
     }
 </script>

@@ -9,17 +9,17 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.url }">
                             <label for="url" class="control-label">Url:</label>
                             <input type="url" name="url" class="form-control" id="url" v-model="url"
                                    required="required">
                         </div>
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.account }">
                             <label for="account" class="control-label">Account:</label>
                             <input type="text" name="account" class="form-control" id="account" v-model="account"
                                    required="required">
                         </div>
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.password }">
                             <label for="password" class="control-label">Password:</label>
                             <div class="input-group">
                                 <input type="password" name="password" class="form-control" id="password"
@@ -32,13 +32,13 @@
                                   </span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.title }">
                             <label for="pwdTitle" class="control-label">Title:</label>
                             <input type="text" name="pwdTitle" class="form-control" id="pwdTitle" v-model="newTitle"
                                    required="required">
                         </div>
 
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.safetyLevel }">
                             <label for="safetyLevel" class="control-label">SafetyLevel:</label>
                             <div v-for="item , key in safety_levels">
                                 <label class="radio-inline">
@@ -50,21 +50,26 @@
 
                         </div>
 
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': error.description }">
                             <label for="pwdDescription" class="control-label">Description:</label>
                             <textarea class="form-control" id="pwdDescription" v-model="pwdDescription"
                                       required="required"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="boxId" class="control-label">Type:</label>
+                        <div :class="{ 'form-group': true, 'has-error': error.boxId }">
+                            <label for="boxId" class="control-label">SelectBox:</label>
                             <select class="form-control" v-model="boxId" id="boxId" required="required">
                                 <option v-for="box in boxes" v-bind:value="box.id">{{box.title}}</option>
                             </select>
                         </div>
+                        <div class="form-group" v-show="errorInfo != ''">
+                            <p class="text-danger">{{errorInfo}}</p>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default close-modal" data-dismiss="modal">
+                        Close
+                    </button>
                     <button type="button" class="btn btn-primary" @click="addMessage">Save changes</button>
                 </div>
             </div>
@@ -78,7 +83,7 @@
         components: {},
         data(){
             return {
-                defaultTitle: '新增Password',
+                defaultTitle: '新增记录',
                 pwdDescription: '',
                 boxId: this.$store.state.selected,
                 newTitle: '',
@@ -86,6 +91,16 @@
                 account: '',
                 password: '',
                 safetyLevel: 1,
+                error: {
+                    title: false,
+                    description: false,
+                    url: false,
+                    account: false,
+                    password: false,
+                    safetyLevel: false,
+                    boxId: false
+                },
+                errorInfo: ''
             }
         },
         methods: {
@@ -101,13 +116,48 @@
                 };
                 axios.post('/boxes/' + this.boxId + '/passwords', data)
                     .then(response => {
-                        console.log(response.data);
+                        if (response.data.code == 0) {
+                            this.$store.commit('addPasswordList', response.data.data[0]);
+
+                            let currCount = this.$store.state.passwordCount[this.boxId];
+                            if (currCount && currCount != '99+') {
+                                this.$store.commit({
+                                    type: 'updatePasswordAccount',
+                                    id: this.boxId,
+                                    count: this.$store.state.passwordCount[this.boxId] * 1 + 1
+                                });
+                            }
+
+                            this.clearData();
+                            this.closeModal();
+                        } else {
+                            let errors = response.data.error;
+                            for (let error in errors) {
+                                this.error[error] = true;
+                                this.errorInfo += errors[error];
+                            }
+                        }
+
                     })
                     .catch(error => {
                         if (error.response) {
                             console.log(error.response.data.message);
                         }
                     });
+            },
+            clearData(){
+                this.pwdDescription = '';
+                this.boxId = this.$store.state.selected;
+                this.newTitle = '';
+                this.url = '';
+                this.account = '';
+                this.password = '';
+                this.safetyLevel = 1;
+            },
+            closeModal(){
+                Vue.nextTick(() => {
+                    $('.close-modal').trigger('click');
+                });
             }
         },
         mounted(){

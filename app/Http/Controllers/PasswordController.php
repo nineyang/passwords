@@ -56,7 +56,7 @@ class PasswordController extends Controller
         }
 
         try {
-            $this->password->add([
+            $password = $this->password->add([
                 'title' => $request->get('title'),
                 'description' => $request->get('description'),
                 'url' => $request->get('url'),
@@ -72,7 +72,7 @@ class PasswordController extends Controller
             return $this->failed($exception->getMessage());
         }
 
-        return $this->success();
+        return $this->success($this->password->prepare($password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
     }
 
     /**
@@ -87,7 +87,7 @@ class PasswordController extends Controller
         }
         $passwords = $this->password->getPasswordList($b_id);
         if ($passwords) {
-            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url' , 'subAccount']);
+            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url', 'subAccount']);
         }
 
         return $this->success($passwords);

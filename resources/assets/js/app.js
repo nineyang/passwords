@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     state: {
         selected: 0,
         passwordList: [],
+        passwordCount: {}
     },
     mutations: {
         updateSelected(state, id){
@@ -21,6 +22,15 @@ const store = new Vuex.Store({
         },
         updatePasswordList(state, list){
             state.passwordList = list;
+        },
+        addPasswordList(state, password){
+            state.passwordList.push(password);
+        },
+        updatePasswordAccount(state, payload){
+            if (payload.count > 99) {
+                return '99+';
+            }
+            state.passwordCount[payload.id] = payload.count;
         }
     },
     actions: {},
@@ -46,7 +56,7 @@ Vue.component('password-modal', require('./components/Password/Modal.vue'));
 Vue.component('password-caption', require('./components/Password/Caption.vue'));
 Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
-Vue.directive('tooltip', function(el, binding){
+Vue.directive('tooltip', function (el, binding) {
     $(el).tooltip({
         title: binding.value,
         placement: binding.arg,

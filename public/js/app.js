@@ -1098,7 +1098,8 @@ window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     state: {
         selected: 0,
-        passwordList: []
+        passwordList: [],
+        passwordCount: {}
     },
     mutations: {
         updateSelected: function updateSelected(state, id) {
@@ -1106,6 +1107,15 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
         },
         updatePasswordList: function updatePasswordList(state, list) {
             state.passwordList = list;
+        },
+        addPasswordList: function addPasswordList(state, password) {
+            state.passwordList.push(password);
+        },
+        updatePasswordAccount: function updatePasswordAccount(state, payload) {
+            if (payload.count > 99) {
+                return '99+';
+            }
+            state.passwordCount[payload.id] = payload.count;
         }
     },
     actions: {},
@@ -44070,7 +44080,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
-    mounted: function mounted() {}
+    created: function created() {
+        this.$store.commit({
+            type: 'updatePasswordAccount',
+            id: this.id,
+            count: this.passwords
+        });
+    }
 });
 
 /***/ }),
@@ -44112,7 +44128,7 @@ var render = function() {
             ],
             staticClass: "badge"
           },
-          [_vm._v(_vm._s(_vm.passwords))]
+          [_vm._v(_vm._s(this.$store.state.passwordCount[_vm.id]))]
         )
       ])
     ]
@@ -44744,25 +44760,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['pwdTitle', 'boxes', 'safety_levels'],
     components: {},
     data: function data() {
         return {
-            defaultTitle: '新增Password',
+            defaultTitle: '新增记录',
             pwdDescription: '',
             boxId: this.$store.state.selected,
             newTitle: '',
             url: '',
             account: '',
             password: '',
-            safetyLevel: 1
+            safetyLevel: 1,
+            error: {
+                title: false,
+                description: false,
+                url: false,
+                account: false,
+                password: false,
+                safetyLevel: false,
+                boxId: false
+            },
+            errorInfo: ''
         };
     },
 
     methods: {
         addMessage: function addMessage() {
+            var _this = this;
+
             var data = {
                 title: this.newTitle,
                 description: this.pwdDescription,
@@ -44773,11 +44806,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 url: this.url
             };
             axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
-                console.log(response.data);
+                if (response.data.code == 0) {
+                    _this.$store.commit('addPasswordList', response.data.data[0]);
+
+                    var currCount = _this.$store.state.passwordCount[_this.boxId];
+                    if (currCount && currCount != '99+') {
+                        _this.$store.commit({
+                            type: 'updatePasswordAccount',
+                            id: _this.boxId,
+                            count: _this.$store.state.passwordCount[_this.boxId] * 1 + 1
+                        });
+                    }
+
+                    _this.clearData();
+                    _this.closeModal();
+                } else {
+                    var errors = response.data.error;
+                    for (var error in errors) {
+                        _this.error[error] = true;
+                        _this.errorInfo += errors[error];
+                    }
+                }
             }).catch(function (error) {
                 if (error.response) {
                     console.log(error.response.data.message);
                 }
+            });
+        },
+        clearData: function clearData() {
+            this.pwdDescription = '';
+            this.boxId = this.$store.state.selected;
+            this.newTitle = '';
+            this.url = '';
+            this.account = '';
+            this.password = '';
+            this.safetyLevel = 1;
+        },
+        closeModal: function closeModal() {
+            Vue.nextTick(function () {
+                $('.close-modal').trigger('click');
             });
         }
     },
@@ -44832,153 +44899,184 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("form", [
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "url" } },
-                  [_vm._v("Url:")]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.url,
-                      expression: "url"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "url",
-                    name: "url",
-                    id: "url",
-                    required: "required"
-                  },
-                  domProps: { value: _vm.url },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.url = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "account" } },
-                  [_vm._v("Account:")]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.account,
-                      expression: "account"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    name: "account",
-                    id: "account",
-                    required: "required"
-                  },
-                  domProps: { value: _vm.account },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.account = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "password" } },
-                  [_vm._v("Password:")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-group" }, [
+              _c(
+                "div",
+                { class: { "form-group": true, "has-error": _vm.error.url } },
+                [
+                  _c(
+                    "label",
+                    { staticClass: "control-label", attrs: { for: "url" } },
+                    [_vm._v("Url:")]
+                  ),
+                  _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.password,
-                        expression: "password"
+                        value: _vm.url,
+                        expression: "url"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: {
-                      type: "password",
-                      name: "password",
-                      id: "password",
+                      type: "url",
+                      name: "url",
+                      id: "url",
                       required: "required"
                     },
-                    domProps: { value: _vm.password },
+                    domProps: { value: _vm.url },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.password = $event.target.value
+                        _vm.url = $event.target.value
                       }
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm._m(1)
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "pwdTitle" } },
-                  [_vm._v("Title:")]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.newTitle,
-                      expression: "newTitle"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    name: "pwdTitle",
-                    id: "pwdTitle",
-                    required: "required"
-                  },
-                  domProps: { value: _vm.newTitle },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.newTitle = $event.target.value
-                    }
-                  }
-                })
-              ]),
+                  })
+                ]
+              ),
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "form-group" },
+                {
+                  class: { "form-group": true, "has-error": _vm.error.account }
+                },
+                [
+                  _c(
+                    "label",
+                    { staticClass: "control-label", attrs: { for: "account" } },
+                    [_vm._v("Account:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.account,
+                        expression: "account"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "account",
+                      id: "account",
+                      required: "required"
+                    },
+                    domProps: { value: _vm.account },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.account = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  class: { "form-group": true, "has-error": _vm.error.password }
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "control-label",
+                      attrs: { for: "password" }
+                    },
+                    [_vm._v("Password:")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.password,
+                          expression: "password"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "password",
+                        name: "password",
+                        id: "password",
+                        required: "required"
+                      },
+                      domProps: { value: _vm.password },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.password = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { class: { "form-group": true, "has-error": _vm.error.title } },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "control-label",
+                      attrs: { for: "pwdTitle" }
+                    },
+                    [_vm._v("Title:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newTitle,
+                        expression: "newTitle"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "pwdTitle",
+                      id: "pwdTitle",
+                      required: "required"
+                    },
+                    domProps: { value: _vm.newTitle },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.newTitle = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  class: {
+                    "form-group": true,
+                    "has-error": _vm.error.safetyLevel
+                  }
+                },
                 [
                   _c(
                     "label",
@@ -45025,82 +45123,115 @@ var render = function() {
                 2
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "control-label",
-                    attrs: { for: "pwdDescription" }
-                  },
-                  [_vm._v("Description:")]
-                ),
-                _vm._v(" "),
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.pwdDescription,
-                      expression: "pwdDescription"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { id: "pwdDescription", required: "required" },
-                  domProps: { value: _vm.pwdDescription },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.pwdDescription = $event.target.value
-                    }
+              _c(
+                "div",
+                {
+                  class: {
+                    "form-group": true,
+                    "has-error": _vm.error.description
                   }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  { staticClass: "control-label", attrs: { for: "boxId" } },
-                  [_vm._v("Type:")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "control-label",
+                      attrs: { for: "pwdDescription" }
+                    },
+                    [_vm._v("Description:")]
+                  ),
+                  _vm._v(" "),
+                  _c("textarea", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.boxId,
-                        expression: "boxId"
+                        value: _vm.pwdDescription,
+                        expression: "pwdDescription"
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { id: "boxId", required: "required" },
+                    attrs: { id: "pwdDescription", required: "required" },
+                    domProps: { value: _vm.pwdDescription },
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.boxId = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.pwdDescription = $event.target.value
                       }
                     }
-                  },
-                  _vm._l(_vm.boxes, function(box) {
-                    return _c("option", { domProps: { value: box.id } }, [
-                      _vm._v(_vm._s(box.title))
-                    ])
                   })
-                )
-              ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { class: { "form-group": true, "has-error": _vm.error.boxId } },
+                [
+                  _c(
+                    "label",
+                    { staticClass: "control-label", attrs: { for: "boxId" } },
+                    [_vm._v("SelectBox:")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.boxId,
+                          expression: "boxId"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "boxId", required: "required" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.boxId = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.boxes, function(box) {
+                      return _c("option", { domProps: { value: box.id } }, [
+                        _vm._v(_vm._s(box.title))
+                      ])
+                    })
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errorInfo != "",
+                      expression: "errorInfo != ''"
+                    }
+                  ],
+                  staticClass: "form-group"
+                },
+                [
+                  _c("p", { staticClass: "text-danger" }, [
+                    _vm._v(_vm._s(_vm.errorInfo))
+                  ])
+                ]
+              )
             ])
           ]),
           _vm._v(" "),
@@ -45108,10 +45239,10 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn btn-default",
+                staticClass: "btn btn-default close-modal",
                 attrs: { type: "button", "data-dismiss": "modal" }
               },
-              [_vm._v("Close")]
+              [_vm._v("\n                    Close\n                ")]
             ),
             _vm._v(" "),
             _c(
@@ -45475,7 +45606,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['name'],
-    mounted: function mounted() {}
+    mounted: function mounted() {},
+
+    methods: {}
 });
 
 /***/ }),
@@ -45486,7 +45619,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
+  return _c("div", { staticClass: "container-fluid" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
         _c("div", { staticClass: "panel panel-default" }, [
@@ -45600,8 +45733,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {}
+    mounted: function mounted() {},
+
+
+    methods: {
+        editPassword: function editPassword() {
+            console.log('aaaa');
+            Vue.nextTick(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -45615,7 +45759,7 @@ var render = function() {
   return _c(
     "div",
     _vm._l(this.$store.state.passwordList, function(item) {
-      return _c("div", { staticClass: "col-sm-2 col-md-2" }, [
+      return _c("div", { staticClass: "col-sm-3 col-md-3" }, [
         _c("div", { staticClass: "thumbnail" }, [
           _c("div", { staticClass: "caption" }, [
             _c(
@@ -45651,7 +45795,21 @@ var render = function() {
             ),
             _vm._v(" "),
             _c("p", { staticClass: "pull-right" }, [
-              _vm._m(0, true),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-default btn-xs",
+                  attrs: { type: "button" },
+                  on: { click: _vm.editPassword }
+                },
+                [
+                  _c("span", {
+                    staticClass: "glyphicon glyphicon-wrench",
+                    attrs: { "aria-hidden": "true" }
+                  }),
+                  _vm._v(" 编辑\n                    ")
+                ]
+              ),
               _vm._v(" "),
               _c(
                 "button",
@@ -45686,7 +45844,7 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _vm._m(1, true)
+              _vm._m(0, true)
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "clearfix" })
@@ -45697,22 +45855,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-default btn-xs", attrs: { type: "button" } },
-      [
-        _c("span", {
-          staticClass: "glyphicon glyphicon-wrench",
-          attrs: { "aria-hidden": "true" }
-        }),
-        _vm._v(" 编辑\n                    ")
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
