@@ -1106,14 +1106,14 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
         updateSelectedBox: function updateSelectedBox(state, id) {
             state.selectedBox = id;
         },
-        updatePasswordList: function updatePasswordList(state, list) {
+        initPasswordList: function initPasswordList(state, list) {
             // todo 优化一下，这里可以弄成key的形式
             state.passwordList = {};
             list.map(function (pwd) {
                 state.passwordList[pwd.id] = pwd;
             });
         },
-        addPasswordList: function addPasswordList(state, password) {
+        updatePasswordList: function updatePasswordList(state, password) {
             var tmp = state.passwordList;
             state.passwordList = {};
             tmp[password.id] = password;
@@ -44089,7 +44089,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // 更新selected
                 _this.$store.commit('updateSelectedBox', _this.id);
                 // 更新list
-                _this.$store.commit('updatePasswordList', response.data.data);
+                _this.$store.commit('initPasswordList', response.data.data);
             }).catch(function (error) {
                 if (error.response) {
                     console.log(error.response.data.message);
@@ -44844,7 +44844,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         get: function get() {
             var _this = this;
 
-            axios.get('/boxes/' + this.boxId + '/passwords/' + this.$store.state.selectedPassword, {}).then(function (response) {
+            axios.get('/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword, {}).then(function (response) {
                 if (response.data.code == 0) {
                     var info = response.data.data[0];
                     _this.account = info.account;
@@ -44865,7 +44865,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
                 if (response.data.code == 0) {
-                    _this2.$store.commit('addPasswordList', response.data.data[0]);
+                    _this2.$store.commit('updatePasswordList', response.data.data[0]);
 
                     var currCount = _this2.$store.state.passwordCount[_this2.boxId];
                     if (currCount != '99+') {
@@ -44876,7 +44876,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         });
                     }
 
-                    _this2.clearData();
+                    //                            this.clearData();
                     _this2.closeModal();
                 } else {
                     var errors = response.data.error;
@@ -44896,9 +44896,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.put('/boxes/' + this.boxId + '/passwords/' + id, data).then(function (response) {
                 if (response.data.code == 0) {
-                    _this3.$store.commit('addPasswordList', response.data.data[0]);
+                    _this3.$store.commit('updatePasswordList', response.data.data[0]);
 
-                    _this3.clearData();
+                    //                            this.clearData();
                     _this3.closeModal();
                 } else {
                     var errors = response.data.error;

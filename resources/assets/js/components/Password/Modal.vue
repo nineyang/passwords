@@ -136,7 +136,7 @@
                 });
             },
             get(){
-                axios.get('/boxes/' + this.boxId + '/passwords/' + this.$store.state.selectedPassword, {})
+                axios.get('/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword, {})
                     .then(response => {
                         if (response.data.code == 0) {
                             let info = response.data.data[0];
@@ -161,7 +161,7 @@
                 axios.post('/boxes/' + this.boxId + '/passwords', data)
                     .then(response => {
                         if (response.data.code == 0) {
-                            this.$store.commit('addPasswordList', response.data.data[0]);
+                            this.$store.commit('updatePasswordList', response.data.data[0]);
 
                             let currCount = this.$store.state.passwordCount[this.boxId];
                             if (currCount != '99+') {
@@ -172,7 +172,7 @@
                                 });
                             }
 
-                            this.clearData();
+//                            this.clearData();
                             this.closeModal();
                         } else {
                             let errors = response.data.error;
@@ -193,9 +193,9 @@
                 axios.put('/boxes/' + this.boxId + '/passwords/' + id, data)
                     .then(response => {
                         if (response.data.code == 0) {
-                            this.$store.commit('addPasswordList', response.data.data[0]);
+                            this.$store.commit('updatePasswordList', response.data.data[0]);
 
-                            this.clearData();
+//                            this.clearData();
                             this.closeModal();
                         } else {
                             let errors = response.data.error;

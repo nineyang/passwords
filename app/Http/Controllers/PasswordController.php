@@ -77,6 +77,49 @@ class PasswordController extends Controller
 
     /**
      * @param Request $request
+     * @return array
+     */
+    public function update(Request $request)
+    {
+        if (auth()->user()->cant('update', [$request->password, $request->box])) {
+            return $this->failed('no access');
+        }
+        $res = $this->verify($request, [
+            'title' => 'required|max:64',
+            'description' => 'required',
+            'url' => 'required',
+            'account' => 'required|max:32',
+            'password' => 'required',
+            'boxId' => 'required',
+            'safetyLevel' => 'required|int'
+        ]);
+        if (is_array($res) && !empty($res)) {
+            return $this->failed($res);
+        }
+        if (!config('password.level.' . $request->get('safetyLevel'))) {
+            return $this->failed('level is wrong');
+        }
+
+        try {
+            $request->password->update([
+                'title' => $request->get('title'),
+                'description' => $request->get('description'),
+                'url' => $request->get('url'),
+                'account' => $request->get('account'),
+                'password' => encrypt($request->get('password')),
+                'box_id' => $request->get('boxId'),
+                'safety_level' => $request->get('safetyLevel'),
+            ]);
+
+        } catch (Exception $exception) {
+            return $this->failed($exception->getMessage());
+        }
+
+        return $this->success($this->password->prepare($request->password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
+    }
+
+    /**
+     * @param Request $request
      * @param $b_id
      * @return array
      */

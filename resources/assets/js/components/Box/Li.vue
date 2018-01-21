@@ -24,7 +24,7 @@
                         // 更新selected
                         this.$store.commit('updateSelectedBox', this.id);
                         // 更新list
-                        this.$store.commit('updatePasswordList', response.data.data);
+                        this.$store.commit('initPasswordList', response.data.data);
                     })
                     .catch(error => {
                         if (error.response) {

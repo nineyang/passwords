@@ -37,10 +37,11 @@ class BoxPolicy
      * @param  \App\Models\User $user
      * @return mixed
      */
-    public function createPassword(User $user , Box $box)
+    public function createPassword(User $user, Box $box)
     {
         return $user->status === config('status.user.available')
-            && $box->status === config('status.box.available');
+            && $box->status === config('status.box.available')
+            && $user->id === $box->user_id;
     }
 
     /**

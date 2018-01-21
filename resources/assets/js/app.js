@@ -21,14 +21,14 @@ const store = new Vuex.Store({
         updateSelectedBox(state, id){
             state.selectedBox = id;
         },
-        updatePasswordList(state, list){
+        initPasswordList(state, list){
             // todo 优化一下，这里可以弄成key的形式
             state.passwordList = {};
-            list.map((pwd) =>{
+            list.map((pwd) => {
                 state.passwordList[pwd.id] = pwd;
             });
         },
-        addPasswordList(state, password){
+        updatePasswordList(state, password){
             let tmp = state.passwordList;
             state.passwordList = {};
             tmp[password.id] = password;
