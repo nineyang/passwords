@@ -81,7 +81,7 @@ class PasswordController extends Controller
      */
     public function update(Request $request)
     {
-        if (auth()->user()->cant('update', [$request->password, $request->box])) {
+        if (auth()->user()->cant('update', $request->box)) {
             return $this->failed('no access');
         }
         $res = $this->verify($request, [
@@ -101,6 +101,10 @@ class PasswordController extends Controller
         }
 
         try {
+            if ($request->get('boxId') != $request->password->box_id) {
+                $this->box->whereId($request->get('boxId'))->increment('passwords');
+                $this->box->whereId($request->password->box_id)->decrement('passwords');
+            }
             $request->password->update([
                 'title' => $request->get('title'),
                 'description' => $request->get('description'),

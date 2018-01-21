@@ -34,6 +34,12 @@ const store = new Vuex.Store({
             tmp[password.id] = password;
             state.passwordList = tmp;
         },
+        deletePasswordList(state, id){
+            let tmp = state.passwordList;
+            state.passwordList = {};
+            delete tmp[id];
+            state.passwordList = tmp;
+        },
         updatePasswordAccount(state, payload){
             if (payload.count > 99) {
                 return '99+';

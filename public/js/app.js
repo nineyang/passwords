@@ -1119,6 +1119,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
             tmp[password.id] = password;
             state.passwordList = tmp;
         },
+        deletePasswordList: function deletePasswordList(state, id) {
+            var tmp = state.passwordList;
+            state.passwordList = {};
+            delete tmp[id];
+            state.passwordList = tmp;
+        },
         updatePasswordAccount: function updatePasswordAccount(state, payload) {
             if (payload.count > 99) {
                 return '99+';
@@ -44805,7 +44811,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 safetyLevel: false,
                 boxId: false
             },
-            errorInfo: ''
+            errorInfo: '',
+            belongBox: 0
         };
     },
 
@@ -44851,8 +44858,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.boxId = info.boxId;
                     _this.url = info.url;
                     _this.safetyLevel = info.safetyLevel;
-                    _this.title = info.title;
+                    _this.newTitle = info.title;
                     _this.pwdDescription = info.description;
+                    _this.belongBox = info.boxId;
                 } else {}
             }).catch(function (error) {
                 if (error.response) {
@@ -44866,15 +44874,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
                 if (response.data.code == 0) {
                     _this2.$store.commit('updatePasswordList', response.data.data[0]);
-
-                    var currCount = _this2.$store.state.passwordCount[_this2.boxId];
-                    if (currCount != '99+') {
-                        _this2.$store.commit({
-                            type: 'updatePasswordAccount',
-                            id: _this2.boxId,
-                            count: currCount ? currCount * 1 + 1 : 1
-                        });
-                    }
+                    _this2.incr(_this2.boxId);
 
                     //                            this.clearData();
                     _this2.closeModal();
@@ -44891,12 +44891,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
+        incr: function incr(id) {
+            var incr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+            // 所选+1
+            var currCount = this.$store.state.passwordCount[id];
+            if (currCount != '99+') {
+                this.$store.commit({
+                    type: 'updatePasswordAccount',
+                    id: id,
+                    count: currCount ? currCount * 1 + incr : 1
+                });
+            }
+        },
+        decr: function decr(id) {
+            var decr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+            // 所选-1
+            var currCount = this.$store.state.passwordCount[id];
+            if (currCount != '99+') {
+                this.$store.commit({
+                    type: 'updatePasswordAccount',
+                    id: id,
+                    count: currCount ? currCount * 1 - decr : 1
+                });
+            }
+        },
         put: function put(id, data) {
             var _this3 = this;
 
             axios.put('/boxes/' + this.boxId + '/passwords/' + id, data).then(function (response) {
                 if (response.data.code == 0) {
-                    _this3.$store.commit('updatePasswordList', response.data.data[0]);
+                    if (_this3.belongBox != _this3.boxId) {
+                        _this3.$store.commit('deletePasswordList', id);
+                        _this3.incr(_this3.boxId);
+                        _this3.decr(_this3.belongBox);
+                    } else {
+                        _this3.$store.commit('updatePasswordList', response.data.data[0]);
+                    }
 
                     //                            this.clearData();
                     _this3.closeModal();

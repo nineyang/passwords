@@ -100,7 +100,8 @@
                     safetyLevel: false,
                     boxId: false
                 },
-                errorInfo: ''
+                errorInfo: '',
+                belongBox: 0,
             }
         },
         methods: {
@@ -144,8 +145,9 @@
                             this.boxId = info.boxId;
                             this.url = info.url;
                             this.safetyLevel = info.safetyLevel;
-                            this.title = info.title;
+                            this.newTitle = info.title;
                             this.pwdDescription = info.description;
+                            this.belongBox = info.boxId;
                         } else {
 
                         }
@@ -162,15 +164,7 @@
                     .then(response => {
                         if (response.data.code == 0) {
                             this.$store.commit('updatePasswordList', response.data.data[0]);
-
-                            let currCount = this.$store.state.passwordCount[this.boxId];
-                            if (currCount != '99+') {
-                                this.$store.commit({
-                                    type: 'updatePasswordAccount',
-                                    id: this.boxId,
-                                    count: currCount ? currCount * 1 + 1 : 1
-                                });
-                            }
+                            this.incr(this.boxId);
 
 //                            this.clearData();
                             this.closeModal();
@@ -189,11 +183,39 @@
                         }
                     });
             },
+            incr(id, incr = 1){
+// 所选+1
+                let currCount = this.$store.state.passwordCount[id];
+                if (currCount != '99+') {
+                    this.$store.commit({
+                        type: 'updatePasswordAccount',
+                        id: id,
+                        count: currCount ? currCount * 1 + incr : 1
+                    });
+                }
+            },
+            decr(id, decr = 1){
+// 所选-1
+                let currCount = this.$store.state.passwordCount[id];
+                if (currCount != '99+') {
+                    this.$store.commit({
+                        type: 'updatePasswordAccount',
+                        id: id,
+                        count: currCount ? currCount * 1 - decr : 1
+                    });
+                }
+            },
             put(id, data){
                 axios.put('/boxes/' + this.boxId + '/passwords/' + id, data)
                     .then(response => {
                         if (response.data.code == 0) {
-                            this.$store.commit('updatePasswordList', response.data.data[0]);
+                            if (this.belongBox != this.boxId) {
+                                this.$store.commit('deletePasswordList', id);
+                                this.incr(this.boxId);
+                                this.decr(this.belongBox);
+                            } else {
+                                this.$store.commit('updatePasswordList', response.data.data[0]);
+                            }
 
 //                            this.clearData();
                             this.closeModal();
