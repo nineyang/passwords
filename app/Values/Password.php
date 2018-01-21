@@ -28,4 +28,20 @@ class Password extends BaseValue
         }
         return $this->account;
     }
+
+    /**
+     * @return null
+     */
+    public function getSafetyLevel()
+    {
+        return $this->safety_level;
+    }
+
+    /**
+     * @return null
+     */
+    public function getBoxId()
+    {
+        return $this->box_id;
+    }
 }

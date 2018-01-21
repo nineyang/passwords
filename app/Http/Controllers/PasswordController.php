@@ -92,4 +92,19 @@ class PasswordController extends Controller
 
         return $this->success($passwords);
     }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function detail(Request $request)
+    {
+        if (auth()->user()->cant('view', [$request->password, $request->box])) {
+            return $this->failed('no access');
+        }
+        $password = $request->password->toArray();
+        $password = $this->password->prepare($password, ['id', 'title', 'account', 'url', 'description', 'safetyLevel', 'boxId']);
+
+        return $this->success($password);
+    }
 }

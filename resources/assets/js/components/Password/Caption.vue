@@ -7,7 +7,8 @@
                     <p v-tooltip:right="item.account">{{item.subAccount}}</p>
 
                     <p class="pull-right">
-                        <button @click="editPassword" type="button" class="btn btn-default btn-xs">
+                        <button @click="updateSelected(item.id)" data-toggle="modal" data-target="#passwordModal"
+                                type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 编辑
                         </button>
                         <button type="button" class="btn btn-default btn-xs">
@@ -38,12 +39,8 @@
         },
 
         methods: {
-            editPassword(){
-                console.log('aaaa');
-                Vue.nextTick(() => {
-                    $('[data-toggle="tooltip"]').tooltip();
-
-                });
+            updateSelected(id){
+                this.$store.commit('updateSelectedPassword', id);
             }
         }
     }

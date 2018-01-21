@@ -1097,13 +1097,14 @@ window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     state: {
-        selected: 0,
+        selectedBox: 0,
         passwordList: [],
-        passwordCount: {}
+        passwordCount: {},
+        selectedPassword: 0
     },
     mutations: {
-        updateSelected: function updateSelected(state, id) {
-            state.selected = id;
+        updateSelectedBox: function updateSelectedBox(state, id) {
+            state.selectedBox = id;
         },
         updatePasswordList: function updatePasswordList(state, list) {
             state.passwordList = list;
@@ -1116,12 +1117,18 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
                 return '99+';
             }
             state.passwordCount[payload.id] = payload.count;
+        },
+        updateSelectedPassword: function updateSelectedPassword(state, id) {
+            state.selectedPassword = id;
         }
     },
     actions: {},
     getters: {
         selected: function selected(state) {
-            return state.selected;
+            return state.selectedBox;
+        },
+        selectedPassword: function selectedPassword(state) {
+            return state.selectedPassword;
         }
     }
 });
@@ -44070,7 +44077,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var url = '/boxes/' + this.id + '/passwords';
             axios.get(url, {}).then(function (response) {
                 // 更新selected
-                _this.$store.commit('updateSelected', _this.id);
+                _this.$store.commit('updateSelectedBox', _this.id);
                 // 更新list
                 _this.$store.commit('updatePasswordList', response.data.data);
             }).catch(function (error) {
@@ -44100,7 +44107,7 @@ var render = function() {
   return _c(
     "li",
     {
-      class: this.$store.state.selected == _vm.id ? "active" : "",
+      class: this.$store.state.selectedBox == _vm.id ? "active" : "",
       attrs: { role: "presentation" },
       on: {
         click: function($event) {
@@ -44846,18 +44853,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Vue.nextTick(function () {
                 $('.close-modal').trigger('click');
             });
+        },
+        get: function get() {
+            var _this2 = this;
+
+            axios.get('/boxes/' + this.boxId + '/passwords/' + this.$store.state.selectedPassword, {}).then(function (response) {
+                if (response.data.code == 0) {
+                    var info = response.data.data[0];
+                    _this2.account = info.account;
+                    _this2.boxId = info.boxId;
+                    _this2.url = info.url;
+                    _this2.safetyLevel = info.safetyLevel;
+                    _this2.title = info.title;
+                    _this2.pwdDescription = info.description;
+                } else {}
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
         }
     },
-    mounted: function mounted() {},
-
     computed: {
         selected: function selected() {
-            return this.$store.state.selected;
+            return this.$store.state.selectedBox;
+        },
+        selectedPassword: function selectedPassword() {
+            return this.$store.state.selectedPassword;
         }
     },
     watch: {
         selected: function selected(newVal, oldVal) {
             this.boxId = newVal;
+        },
+        selectedPassword: function selectedPassword(newVal, oldVal) {
+            if (newVal != 0) {
+                this.get();
+            }
         }
     }
 });
@@ -45732,6 +45764,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -45739,11 +45772,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        editPassword: function editPassword() {
-            console.log('aaaa');
-            Vue.nextTick(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-            });
+        updateSelected: function updateSelected(id) {
+            this.$store.commit('updateSelectedPassword', id);
         }
     }
 });
@@ -45799,8 +45829,16 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-default btn-xs",
-                  attrs: { type: "button" },
-                  on: { click: _vm.editPassword }
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": "#passwordModal",
+                    type: "button"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.updateSelected(item.id)
+                    }
+                  }
                 },
                 [
                   _c("span", {

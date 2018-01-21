@@ -44,8 +44,8 @@
             </div>
 
             <div class="col-md-10 col-sm-10">
-                <common-panel v-show="this.$store.state.selected == 0" name="{{auth()->user()->name}}"></common-panel>
-                <div class="container-fluid" v-show="this.$store.state.selected != 0">
+                <common-panel v-show="this.$store.state.selectedBox == 0" name="{{auth()->user()->name}}"></common-panel>
+                <div class="container-fluid" v-show="this.$store.state.selectedBox != 0">
                     <div class="row">
 
                         {{--foreach password list--}}

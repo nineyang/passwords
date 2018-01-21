@@ -45,11 +45,11 @@ Route::group(['prefix' => 'boxes'], function () {
 
         Route::group(['middleware' => 'checkData:password'], function () {
             # 查看
-            Route::get('/{b_id}/password/{p_id}', 'PasswordController@detail');
+            Route::get('/{b_id}/passwords/{p_id}', 'PasswordController@detail');
             # 更新
-            Route::put('/{b_id}/password/{p_id}', 'PasswordController@update');
+            Route::put('/{b_id}/passwords/{p_id}', 'PasswordController@update');
             # 删除
-            Route::delete('/{b_id}/password/{p_id}', 'PasswordController@delete');
+            Route::delete('/{b_id}/passwords/{p_id}', 'PasswordController@delete');
         });
 
     });

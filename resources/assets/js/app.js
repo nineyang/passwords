@@ -12,13 +12,14 @@ window.Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        selected: 0,
+        selectedBox: 0,
         passwordList: [],
-        passwordCount: {}
+        passwordCount: {},
+        selectedPassword: 0,
     },
     mutations: {
-        updateSelected(state, id){
-            state.selected = id;
+        updateSelectedBox(state, id){
+            state.selectedBox = id;
         },
         updatePasswordList(state, list){
             state.passwordList = list;
@@ -31,12 +32,18 @@ const store = new Vuex.Store({
                 return '99+';
             }
             state.passwordCount[payload.id] = payload.count;
-        }
+        },
+        updateSelectedPassword(state, id){
+            state.selectedPassword = id;
+        },
     },
     actions: {},
     getters: {
         selected (state) {
-            return state.selected;
+            return state.selectedBox;
+        },
+        selectedPassword(state){
+            return state.selectedPassword;
         }
     }
 });

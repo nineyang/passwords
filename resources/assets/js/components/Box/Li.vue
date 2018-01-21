@@ -1,5 +1,5 @@
 <template>
-    <li role="presentation" :class="this.$store.state.selected == id ? 'active' : ''" @click="getInfo()">
+    <li role="presentation" :class="this.$store.state.selectedBox == id ? 'active' : ''" @click="getInfo()">
         <a href="#">
             <span :class="'glyphicon glyphicon-'+icon" aria-hidden="true"></span> {{title}}
             <span class="badge" v-show="passwords > 0">{{this.$store.state.passwordCount[id]}}</span>
@@ -22,7 +22,7 @@
                 axios.get(url, {})
                     .then(response => {
                         // 更新selected
-                        this.$store.commit('updateSelected', this.id);
+                        this.$store.commit('updateSelectedBox', this.id);
                         // 更新list
                         this.$store.commit('updatePasswordList', response.data.data);
                     })

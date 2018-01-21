@@ -158,19 +158,46 @@
                 Vue.nextTick(() => {
                     $('.close-modal').trigger('click');
                 });
-            }
-        },
-        mounted(){
+            },
+            get(){
+                axios.get('/boxes/' + this.boxId + '/passwords/' + this.$store.state.selectedPassword, {})
+                    .then(response => {
+                        if (response.data.code == 0) {
+                            let info = response.data.data[0];
+                            this.account = info.account;
+                            this.boxId = info.boxId;
+                            this.url = info.url;
+                            this.safetyLevel = info.safetyLevel;
+                            this.title = info.title;
+                            this.pwdDescription = info.description;
+                        } else {
 
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                        }
+                    });
+            }
         },
         computed: {
             selected () {
-                return this.$store.state.selected;
+                return this.$store.state.selectedBox;
+            },
+            selectedPassword () {
+                return this.$store.state.selectedPassword;
             }
         },
         watch: {
             selected (newVal, oldVal) {
                 this.boxId = newVal;
+            },
+            selectedPassword (newVal, oldVal) {
+                if (newVal != 0) {
+                    this.get();
+                }
             }
         }
     }
