@@ -44788,6 +44788,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['pwdTitle', 'boxes', 'safety_levels'],
@@ -44812,7 +44813,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 boxId: false
             },
             errorInfo: '',
-            belongBox: 0
+            belongBox: 0,
+            pwdId: this.$store.state.selectedPassword
         };
     },
 
@@ -44960,7 +44962,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         selectedPassword: function selectedPassword(newVal, oldVal) {
             if (newVal != 0) {
+                this.pwdId = this.$store.state.selectedPassword;
+                this.defaultTitle = '编辑记录';
                 this.get();
+            } else {
+                this.defaultTitle = '新增记录';
+                this.pwdId = 0;
             }
         }
     }
@@ -45203,7 +45210,11 @@ var render = function() {
                               expression: "safetyLevel"
                             }
                           ],
-                          attrs: { type: "radio", name: "safetyLevel" },
+                          attrs: {
+                            disabled: _vm.pwdId != 0,
+                            type: "radio",
+                            name: "safetyLevel"
+                          },
                           domProps: {
                             value: key,
                             checked: _vm.safetyLevel == key,

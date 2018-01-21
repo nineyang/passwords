@@ -42,7 +42,8 @@
                             <label for="safetyLevel" class="control-label">SafetyLevel:</label>
                             <div v-for="item , key in safety_levels">
                                 <label class="radio-inline">
-                                    <input v-model="safetyLevel" type="radio" name="safetyLevel" v-bind:value="key"
+                                    <input :disabled="pwdId != 0" v-model="safetyLevel" type="radio" name="safetyLevel"
+                                           v-bind:value="key"
                                            :checked="safetyLevel==key">
                                     {{item}}
                                 </label>
@@ -102,6 +103,7 @@
                 },
                 errorInfo: '',
                 belongBox: 0,
+                pwdId: this.$store.state.selectedPassword
             }
         },
         methods: {
@@ -249,7 +251,12 @@
             },
             selectedPassword (newVal, oldVal) {
                 if (newVal != 0) {
+                    this.pwdId = this.$store.state.selectedPassword;
+                    this.defaultTitle = '编辑记录';
                     this.get();
+                } else {
+                    this.defaultTitle = '新增记录';
+                    this.pwdId = 0;
                 }
             }
         }

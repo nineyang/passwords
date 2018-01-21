@@ -2,7 +2,7 @@
     <div class="add-plus">
         <div class="tools">
             <button v-show="sign == 'remove'" type="button" class="btn btn-default" aria-label="Left Align"
-                     data-toggle="modal" data-target="#passwordModal">
+                    data-toggle="modal" data-target="#passwordModal">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="tooltip"
                       data-placement="top"
                       title="添加密码记录"></span>
