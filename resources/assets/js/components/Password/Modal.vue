@@ -114,36 +114,12 @@
                     boxId: this.boxId,
                     url: this.url
                 };
-                axios.post('/boxes/' + this.boxId + '/passwords', data)
-                    .then(response => {
-                        if (response.data.code == 0) {
-                            this.$store.commit('addPasswordList', response.data.data[0]);
 
-                            let currCount = this.$store.state.passwordCount[this.boxId];
-                            if (currCount && currCount != '99+') {
-                                this.$store.commit({
-                                    type: 'updatePasswordAccount',
-                                    id: this.boxId,
-                                    count: this.$store.state.passwordCount[this.boxId] * 1 + 1
-                                });
-                            }
-
-                            this.clearData();
-                            this.closeModal();
-                        } else {
-                            let errors = response.data.error;
-                            for (let error in errors) {
-                                this.error[error] = true;
-                                this.errorInfo += errors[error];
-                            }
-                        }
-
-                    })
-                    .catch(error => {
-                        if (error.response) {
-                            console.log(error.response.data.message);
-                        }
-                    });
+                if (this.$store.state.selectedPassword == 0) {
+                    this.add(data);
+                } else {
+                    this.put(this.$store.state.selectedPassword, data);
+                }
             },
             clearData(){
                 this.pwdDescription = '';
@@ -172,6 +148,61 @@
                             this.pwdDescription = info.description;
                         } else {
 
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                        }
+                    });
+            },
+            add(data){
+                axios.post('/boxes/' + this.boxId + '/passwords', data)
+                    .then(response => {
+                        if (response.data.code == 0) {
+                            this.$store.commit('addPasswordList', response.data.data[0]);
+
+                            let currCount = this.$store.state.passwordCount[this.boxId];
+                            if (currCount != '99+') {
+                                this.$store.commit({
+                                    type: 'updatePasswordAccount',
+                                    id: this.boxId,
+                                    count: currCount ? currCount * 1 + 1 : 1
+                                });
+                            }
+
+                            this.clearData();
+                            this.closeModal();
+                        } else {
+                            let errors = response.data.error;
+                            for (let error in errors) {
+                                this.error[error] = true;
+                                this.errorInfo += errors[error];
+                            }
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                        }
+                    });
+            },
+            put(id, data){
+                axios.put('/boxes/' + this.boxId + '/passwords/' + id, data)
+                    .then(response => {
+                        if (response.data.code == 0) {
+                            this.$store.commit('addPasswordList', response.data.data[0]);
+
+                            this.clearData();
+                            this.closeModal();
+                        } else {
+                            let errors = response.data.error;
+                            for (let error in errors) {
+                                this.error[error] = true;
+                                this.errorInfo += errors[error];
+                            }
                         }
 
                     })

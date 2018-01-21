@@ -1098,7 +1098,7 @@ window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     state: {
         selectedBox: 0,
-        passwordList: [],
+        passwordList: {},
         passwordCount: {},
         selectedPassword: 0
     },
@@ -1107,16 +1107,26 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
             state.selectedBox = id;
         },
         updatePasswordList: function updatePasswordList(state, list) {
-            state.passwordList = list;
+            // todo 优化一下，这里可以弄成key的形式
+            state.passwordList = {};
+            list.map(function (pwd) {
+                state.passwordList[pwd.id] = pwd;
+            });
         },
         addPasswordList: function addPasswordList(state, password) {
-            state.passwordList.push(password);
+            var tmp = state.passwordList;
+            state.passwordList = {};
+            tmp[password.id] = password;
+            state.passwordList = tmp;
         },
         updatePasswordAccount: function updatePasswordAccount(state, payload) {
             if (payload.count > 99) {
                 return '99+';
             }
-            state.passwordCount[payload.id] = payload.count;
+            var tmp = state.passwordCount;
+            state.passwordCount = {};
+            tmp[payload.id] = payload.count;
+            state.passwordCount = tmp;
         },
         updateSelectedPassword: function updateSelectedPassword(state, id) {
             state.selectedPassword = id;
@@ -44129,8 +44139,8 @@ var render = function() {
               {
                 name: "show",
                 rawName: "v-show",
-                value: _vm.passwords > 0,
-                expression: "passwords > 0"
+                value: this.$store.state.passwordCount[_vm.id] > 0,
+                expression: "this.$store.state.passwordCount[id] > 0"
               }
             ],
             staticClass: "badge"
@@ -44801,8 +44811,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         addMessage: function addMessage() {
-            var _this = this;
-
             var data = {
                 title: this.newTitle,
                 description: this.pwdDescription,
@@ -44812,33 +44820,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 boxId: this.boxId,
                 url: this.url
             };
-            axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
-                if (response.data.code == 0) {
-                    _this.$store.commit('addPasswordList', response.data.data[0]);
 
-                    var currCount = _this.$store.state.passwordCount[_this.boxId];
-                    if (currCount && currCount != '99+') {
-                        _this.$store.commit({
-                            type: 'updatePasswordAccount',
-                            id: _this.boxId,
-                            count: _this.$store.state.passwordCount[_this.boxId] * 1 + 1
-                        });
-                    }
-
-                    _this.clearData();
-                    _this.closeModal();
-                } else {
-                    var errors = response.data.error;
-                    for (var error in errors) {
-                        _this.error[error] = true;
-                        _this.errorInfo += errors[error];
-                    }
-                }
-            }).catch(function (error) {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                }
-            });
+            if (this.$store.state.selectedPassword == 0) {
+                this.add(data);
+            } else {
+                this.put(this.$store.state.selectedPassword, data);
+            }
         },
         clearData: function clearData() {
             this.pwdDescription = '';
@@ -44855,18 +44842,71 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         get: function get() {
-            var _this2 = this;
+            var _this = this;
 
             axios.get('/boxes/' + this.boxId + '/passwords/' + this.$store.state.selectedPassword, {}).then(function (response) {
                 if (response.data.code == 0) {
                     var info = response.data.data[0];
-                    _this2.account = info.account;
-                    _this2.boxId = info.boxId;
-                    _this2.url = info.url;
-                    _this2.safetyLevel = info.safetyLevel;
-                    _this2.title = info.title;
-                    _this2.pwdDescription = info.description;
+                    _this.account = info.account;
+                    _this.boxId = info.boxId;
+                    _this.url = info.url;
+                    _this.safetyLevel = info.safetyLevel;
+                    _this.title = info.title;
+                    _this.pwdDescription = info.description;
                 } else {}
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        },
+        add: function add(data) {
+            var _this2 = this;
+
+            axios.post('/boxes/' + this.boxId + '/passwords', data).then(function (response) {
+                if (response.data.code == 0) {
+                    _this2.$store.commit('addPasswordList', response.data.data[0]);
+
+                    var currCount = _this2.$store.state.passwordCount[_this2.boxId];
+                    if (currCount != '99+') {
+                        _this2.$store.commit({
+                            type: 'updatePasswordAccount',
+                            id: _this2.boxId,
+                            count: currCount ? currCount * 1 + 1 : 1
+                        });
+                    }
+
+                    _this2.clearData();
+                    _this2.closeModal();
+                } else {
+                    var errors = response.data.error;
+                    for (var error in errors) {
+                        _this2.error[error] = true;
+                        _this2.errorInfo += errors[error];
+                    }
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        },
+        put: function put(id, data) {
+            var _this3 = this;
+
+            axios.put('/boxes/' + this.boxId + '/passwords/' + id, data).then(function (response) {
+                if (response.data.code == 0) {
+                    _this3.$store.commit('addPasswordList', response.data.data[0]);
+
+                    _this3.clearData();
+                    _this3.closeModal();
+                } else {
+                    var errors = response.data.error;
+                    for (var error in errors) {
+                        _this3.error[error] = true;
+                        _this3.errorInfo += errors[error];
+                    }
+                }
             }).catch(function (error) {
                 if (error.response) {
                     console.log(error.response.data.message);

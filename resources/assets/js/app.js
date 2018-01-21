@@ -13,7 +13,7 @@ window.Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         selectedBox: 0,
-        passwordList: [],
+        passwordList: {},
         passwordCount: {},
         selectedPassword: 0,
     },
@@ -22,16 +22,26 @@ const store = new Vuex.Store({
             state.selectedBox = id;
         },
         updatePasswordList(state, list){
-            state.passwordList = list;
+            // todo 优化一下，这里可以弄成key的形式
+            state.passwordList = {};
+            list.map((pwd) =>{
+                state.passwordList[pwd.id] = pwd;
+            });
         },
         addPasswordList(state, password){
-            state.passwordList.push(password);
+            let tmp = state.passwordList;
+            state.passwordList = {};
+            tmp[password.id] = password;
+            state.passwordList = tmp;
         },
         updatePasswordAccount(state, payload){
             if (payload.count > 99) {
                 return '99+';
             }
-            state.passwordCount[payload.id] = payload.count;
+            let tmp = state.passwordCount;
+            state.passwordCount = {};
+            tmp[payload.id] = payload.count;
+            state.passwordCount = tmp;
         },
         updateSelectedPassword(state, id){
             state.selectedPassword = id;

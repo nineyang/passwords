@@ -2,7 +2,7 @@
     <li role="presentation" :class="this.$store.state.selectedBox == id ? 'active' : ''" @click="getInfo()">
         <a href="#">
             <span :class="'glyphicon glyphicon-'+icon" aria-hidden="true"></span> {{title}}
-            <span class="badge" v-show="passwords > 0">{{this.$store.state.passwordCount[id]}}</span>
+            <span class="badge" v-show="this.$store.state.passwordCount[id] > 0">{{this.$store.state.passwordCount[id]}}</span>
         </a>
     </li>
 </template>
