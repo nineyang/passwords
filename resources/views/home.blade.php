@@ -60,6 +60,8 @@
 
             <home-plus></home-plus>
 
+            <password-delete></password-delete>
+
 
         </div>
     </div>

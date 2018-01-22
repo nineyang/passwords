@@ -30,6 +30,8 @@ Route::group(['prefix' => 'boxes'], function () {
     # 新增
     Route::post('/', 'BoxController@add');
 
+    Route::get('/deleted/passwords' , 'PasswordController@deletedList');
+
     Route::group(['middleware' => 'checkData:box'], function () {
         # 查看
         Route::get('/{b_id}', 'BoxController@detail');
@@ -53,6 +55,5 @@ Route::group(['prefix' => 'boxes'], function () {
         });
 
     });
-
 
 });

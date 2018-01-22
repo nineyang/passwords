@@ -35,13 +35,16 @@ class Password extends BaseModel
      * @param $status
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function getPasswordList($box_id, $status = 'available')
+    public function getPasswordList($box_id = 0, $status = 'available')
     {
         $condition = [
-            'box_id' => $box_id,
             'user_id' => auth()->id(),
             'status' => $this->getStatus()[$status]
         ];
+
+        if ($box_id) {
+            $condition['box_id'] = $box_id;
+        }
 
         return $this->where($condition)->get()->toArray();
     }

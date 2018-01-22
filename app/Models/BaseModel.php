@@ -47,7 +47,7 @@ class BaseModel extends Model
      * @param string $order
      * @return array
      */
-    public function listByStatus($status = 'available' , $order = 'sort')
+    public function listByStatus($status = 'available', $order = 'sort')
     {
         $condition = [
             'user_id' => auth()->id(),
@@ -115,5 +115,18 @@ class BaseModel extends Model
             return (new $value_class($input, $output))->handler();
         }
         return $output;
+    }
+
+    /**
+     * @return bool
+     */
+    public function deleteSoft()
+    {
+        $this->update([
+            'status' => $this->getStatus()['deleted'],
+            'updated_at' => time()
+        ]);
+
+        return true;
     }
 }

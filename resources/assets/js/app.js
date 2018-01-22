@@ -15,14 +15,15 @@ const store = new Vuex.Store({
         selectedBox: 0,
         passwordList: {},
         passwordCount: {},
+        deletedPasswordList: {},
         selectedPassword: 0,
+        deletePassword: 0
     },
     mutations: {
         updateSelectedBox(state, id){
             state.selectedBox = id;
         },
         initPasswordList(state, list){
-            // todo 优化一下，这里可以弄成key的形式
             state.passwordList = {};
             list.map((pwd) => {
                 state.passwordList[pwd.id] = pwd;
@@ -52,6 +53,27 @@ const store = new Vuex.Store({
         updateSelectedPassword(state, id){
             state.selectedPassword = id;
         },
+        updateDeletePassword(state, id){
+            state.deletePassword = id;
+        },
+        initDeletedPasswordList(state, list){
+            state.deletedPasswordList = {};
+            list.map((pwd) => {
+                state.deletedPasswordList[pwd.id] = pwd;
+            });
+        },
+        addDeletedPasswordList(state, password){
+            let tmp = state.deletedPasswordList;
+            state.deletedPasswordList = {};
+            tmp[password.id] = password;
+            state.deletedPasswordList = tmp;
+        },
+        removeDeletedPasswordList(state, id){
+            let tmp = state.deletedPasswordList;
+            state.deletedPasswordList = {};
+            delete tmp[id];
+            state.deletedPasswordList = tmp;
+        },
     },
     actions: {},
     getters: {
@@ -60,7 +82,10 @@ const store = new Vuex.Store({
         },
         selectedPassword(state){
             return state.selectedPassword;
-        }
+        },
+        deleted (state) {
+            return state.deletePassword;
+        },
     }
 });
 
@@ -77,6 +102,7 @@ Vue.component('box-modal', require('./components/Box/Modal.vue'));
 Vue.component('password-li', require('./components/Password/Li.vue'));
 Vue.component('password-modal', require('./components/Password/Modal.vue'));
 Vue.component('password-caption', require('./components/Password/Caption.vue'));
+Vue.component('password-delete', require('./components/Password/Delete.vue'));
 Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
 Vue.directive('tooltip', function (el, binding) {

@@ -57,8 +57,10 @@ class PasswordPolicy
      * @param  \App\Models\Password $password
      * @return mixed
      */
-    public function delete(User $user, Password $password)
+    public function delete(User $user, Password $password, Box $box)
     {
-        //
+        return $user->id === $password->user_id
+            && $user->id === $box->user_id
+            && $password->box_id === $box->id;
     }
 }

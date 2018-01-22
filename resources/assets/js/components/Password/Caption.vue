@@ -19,7 +19,8 @@
                             </a>
 
                         </button>
-                        <button type="button" class="btn btn-default btn-xs">
+                        <button data-toggle="modal" data-target=".delete-modal" type="button" @click="deleted(item.id)"
+                                class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
                         </button>
                     </p>
@@ -40,6 +41,9 @@
         methods: {
             updateSelected(id){
                 this.$store.commit('updateSelectedPassword', id);
+            },
+            deleted(id){
+                this.$store.commit('updateDeletePassword', id);
             }
         }
     }

@@ -154,4 +154,32 @@ class PasswordController extends Controller
 
         return $this->success($password);
     }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function delete(Request $request)
+    {
+        if (auth()->user()->cant('delete', [$request->password, $request->box])) {
+            return $this->failed('no access');
+        }
+        $request->password->deleteSoft();
+        $this->box->whereId($request->password->box_id)->decrement('passwords');
+
+        return $this->success($this->password->prepare($request->password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
+    }
+
+    /**
+     * @return array
+     */
+    public function deletedList()
+    {
+        $passwords = $this->password->getPasswordList(0, 'deleted');
+        if ($passwords) {
+            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url', 'subAccount']);
+        }
+
+        return $this->success($passwords);
+    }
 }
