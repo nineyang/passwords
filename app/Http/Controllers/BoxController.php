@@ -33,7 +33,7 @@ class BoxController extends Controller
      */
     public function add(Request $request)
     {
-        if (auth()->user()->cant('create', $request->box)) {
+        if (auth()->user()->cant('create' , Box::class)) {
             return $this->failed('no access');
         }
         $res = $this->verify($request, [
@@ -45,12 +45,12 @@ class BoxController extends Controller
             return $this->failed($res);
         }
         try {
-            $this->box->add($request->all());
+            $box = $this->box->add($request->all());
         } catch (Exception $exception) {
             return $this->failed($exception->getMessage());
         }
 
-        return $this->success();
+        return $this->success($this->box->prepare($box->toArray() , ['id' , 'title' , 'type' , 'icon']));
     }
 
     /**
@@ -59,7 +59,7 @@ class BoxController extends Controller
      */
     public function detail(Request $request)
     {
-        if (auth()->user()->cant('view', $request->box)) {
+        if (auth()->user()->cant('view' , $request->box)) {
             return $this->failed('no access');
         }
         $box = $request->box->toArray();
@@ -91,11 +91,6 @@ class BoxController extends Controller
             return $this->failed($exception->getMessage());
         }
 
-        return $this->success();
-    }
-
-    public function passwordList(Request $request)
-    {
         return $this->success();
     }
 }

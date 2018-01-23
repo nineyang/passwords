@@ -171,6 +171,7 @@
 //                            this.clearData();
                             this.closeModal();
                         } else {
+                            this.errorInfo = '';
                             let errors = response.data.error;
                             for (let error in errors) {
                                 this.error[error] = true;
@@ -222,6 +223,7 @@
 //                            this.clearData();
                             this.closeModal();
                         } else {
+                            this.errorInfo = '';
                             let errors = response.data.error;
                             for (let error in errors) {
                                 this.error[error] = true;
