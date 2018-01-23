@@ -67,7 +67,7 @@
                 axios.post('/boxes', data)
                     .then(response => {
                         if (response.data.code == 0) {
-
+                            location.reload();
                         } else {
                             this.errorInfo = '';
                             let errors = response.data.error;

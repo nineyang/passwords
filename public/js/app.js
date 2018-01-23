@@ -44429,7 +44429,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: this.type
             };
             axios.post('/boxes', data).then(function (response) {
-                if (response.data.code == 0) {} else {
+                if (response.data.code == 0) {
+                    location.reload();
+                } else {
                     _this.errorInfo = '';
                     var errors = response.data.error;
                     for (var error in errors) {
