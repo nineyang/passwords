@@ -9,6 +9,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
+use App\Events\SendEmailEvent;
 
 class Controller extends BaseController
 {
@@ -36,7 +38,7 @@ class Controller extends BaseController
      * @param array $data
      * @return array
      */
-    public function success($data = [] , $msg = 'success')
+    public function success($data = [], $msg = 'success')
     {
         return [
             'code' => 0,
@@ -57,4 +59,13 @@ class Controller extends BaseController
         ];
     }
 
+    /**
+     * @param string $type
+     * @return mixed
+     */
+    public function sendMailCode($type = 'view')
+    {
+        # 邮件队列发送邮件
+        event(new SendEmailEvent(auth()->user(), 'code', ['type' => $type]));
+    }
 }

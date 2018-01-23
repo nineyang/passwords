@@ -199,8 +199,15 @@ class PasswordController extends Controller
         return $this->success($this->password->prepare($password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
     }
 
-    public function getPassword()
+    public function getPassword(Request $request)
     {
+        if (auth()->user()->cant('viewPassword', $request->password)) {
+            return $this->failed('no access');
+        }
+    }
 
+    public function sendCode()
+    {
+        $this->sendMailCode();
     }
 }

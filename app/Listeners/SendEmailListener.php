@@ -10,8 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class SendEmailListener
 {
+    /**
+     * @var string
+     */
     private $_prefix;
 
+    /**
+     * @var string
+     */
     private $_namespace;
 
     /**
@@ -33,7 +39,8 @@ class SendEmailListener
     {
         $mail_object = $this->_namespace . $this->_prefix . ucfirst($event->type);
         try {
-            Mail::to($event->user)->send(new $mail_object($event->user));
+            array_unshift($event->other_params , $event->user);
+            Mail::to($event->user)->send(new $mail_object(...array_values($event->other_params)));
         } catch (\Exception $exception) {
             Log::debug('send email failed', [
                 'error_msg' => $exception->getMessage(),

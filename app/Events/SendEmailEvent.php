@@ -26,14 +26,21 @@ class SendEmailEvent
     public $type;
 
     /**
+     * @var array
+     */
+    public $other_params;
+
+    /**
      * SendEmailEvent constructor.
      * @param User $user
      * @param string $type
+     * @param array $other_params
      */
-    public function __construct(User $user, $type = 'verify')
+    public function __construct(User $user, $type = 'verify', $other_params = [])
     {
         $this->user = $user;
         $this->type = $type;
+        $this->other_params = $other_params;
     }
 
     /**

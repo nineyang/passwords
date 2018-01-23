@@ -6,6 +6,8 @@ use App\Models\Box;
 use App\Models\User;
 use App\Models\Password;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 class PasswordPolicy
 {
@@ -76,5 +78,31 @@ class PasswordPolicy
         return $user->id === $password->user_id
             && $user->id === $box->user_id
             && $password->box_id === $box->id;
+    }
+
+    /**
+     * Determine whether the user can delete the password.
+     *
+     * @param  \App\Models\User $user
+     * @param  \App\Models\Password $password
+     * @return mixed
+     */
+    public function viewPassword(User $user, Password $password)
+    {
+        if ($user->id !== $password->user_id) {
+            return false;
+        }
+
+        switch ($password->safety_level) {
+            case 2:
+                return Hash::check(request()->get('main_password'), $user->password);
+                break;
+            case 3:
+                return Cache::get("{$password->user_id}:viewCode") == request()->get('code');
+                break;
+            default:
+                return true;
+                break;
+        }
     }
 }

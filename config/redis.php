@@ -6,5 +6,9 @@
  */
 
 return [
-    'verify' => time() + 86400
+    // 邮箱验证
+    'verify' => time() + 86400,
+
+    // 浏览密码的code
+    'view' => time() + 600
 ];

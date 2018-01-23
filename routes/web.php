@@ -53,10 +53,15 @@ Route::group(['prefix' => 'boxes'], function () {
             # 删除
             Route::delete('/{b_id}/passwords/{p_id}', 'PasswordController@delete');
 
+            # 查看密码
+            Route::get('/{b_id}/passwords/{p_id}/password', 'PasswordController@getPassword');
         });
 
         # 恢复password
         Route::put('/{b_id}/passwords/{p_id}/restore', 'PasswordController@restore');
+
+        # 发送查看密码的请求
+        Route::get('/{b_id}/passwords/{p_id}/email/code' , 'PasswordController@sendCode');
 
     });
 
