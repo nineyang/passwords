@@ -2,16 +2,12 @@
     <div class="add-plus">
         <div class="tools">
             <button v-show="sign == 'remove'" type="button" class="btn btn-default" aria-label="Left Align"
-                    data-toggle="modal" data-target="#passwordModal">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="tooltip"
-                      data-placement="top"
-                      title="添加密码记录"></span>
+                    data-toggle="modal" data-target="#passwordModal" v-tooltip:top="'添加密码记录'">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </button>
 
             <button v-show="sign == 'remove'" type="button" class="btn btn-default" aria-label="Left Align"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="生成密码工具">
+                    v-tooltip:top="'生成密码工具'">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
             </button>
         </div>

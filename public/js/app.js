@@ -45941,10 +45941,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -45984,6 +45980,13 @@ var render = function() {
               rawName: "v-show",
               value: _vm.sign == "remove",
               expression: "sign == 'remove'"
+            },
+            {
+              name: "tooltip",
+              rawName: "v-tooltip:top",
+              value: "添加密码记录",
+              expression: "'添加密码记录'",
+              arg: "top"
             }
           ],
           staticClass: "btn btn-default",
@@ -45997,12 +46000,7 @@ var render = function() {
         [
           _c("span", {
             staticClass: "glyphicon glyphicon-plus",
-            attrs: {
-              "aria-hidden": "true",
-              "data-toggle": "tooltip",
-              "data-placement": "top",
-              title: "添加密码记录"
-            }
+            attrs: { "aria-hidden": "true" }
           })
         ]
       ),
@@ -46016,16 +46014,17 @@ var render = function() {
               rawName: "v-show",
               value: _vm.sign == "remove",
               expression: "sign == 'remove'"
+            },
+            {
+              name: "tooltip",
+              rawName: "v-tooltip:top",
+              value: "生成密码工具",
+              expression: "'生成密码工具'",
+              arg: "top"
             }
           ],
           staticClass: "btn btn-default",
-          attrs: {
-            type: "button",
-            "aria-label": "Left Align",
-            "data-toggle": "tooltip",
-            "data-placement": "top",
-            title: "生成密码工具"
-          }
+          attrs: { type: "button", "aria-label": "Left Align" }
         },
         [
           _c("span", {
