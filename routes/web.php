@@ -30,7 +30,7 @@ Route::group(['prefix' => 'boxes'], function () {
     # 新增
     Route::post('/', 'BoxController@add');
 
-    Route::get('/deleted/passwords' , 'PasswordController@deletedList');
+    Route::get('/deleted/passwords', 'PasswordController@deletedList');
 
     Route::group(['middleware' => 'checkData:box'], function () {
         # 查看
@@ -52,7 +52,11 @@ Route::group(['prefix' => 'boxes'], function () {
             Route::put('/{b_id}/passwords/{p_id}', 'PasswordController@update');
             # 删除
             Route::delete('/{b_id}/passwords/{p_id}', 'PasswordController@delete');
+
         });
+
+        # 恢复password
+        Route::put('/{b_id}/passwords/{p_id}/restore', 'PasswordController@restore');
 
     });
 

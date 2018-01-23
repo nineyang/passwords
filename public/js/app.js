@@ -1093,7 +1093,7 @@ __webpack_require__(12);
 
 window.Vue = __webpack_require__(36);
 
-window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     state: {
@@ -1188,6 +1188,7 @@ Vue.component('password-li', __webpack_require__(52));
 Vue.component('password-modal', __webpack_require__(55));
 Vue.component('password-caption', __webpack_require__(58));
 Vue.component('password-delete', __webpack_require__(77));
+Vue.component('password-restore', __webpack_require__(80));
 Vue.component('home-plus', __webpack_require__(61));
 
 Vue.directive('tooltip', function (el, binding) {
@@ -44997,7 +44998,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             newTitle: '',
             url: '',
             account: '',
-            password: '',
+            password: '***',
             safetyLevel: 1,
             error: {
                 title: false,
@@ -45705,6 +45706,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -45716,6 +45725,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$store.commit('updateSelectedPassword', id);
         },
         deleted: function deleted(id) {
+            this.$store.commit('updateDeletePassword', id);
+        },
+        restore: function restore(id) {
             this.$store.commit('updateDeletePassword', id);
         }
     }
@@ -45828,6 +45840,14 @@ var render = function() {
               _c(
                 "button",
                 {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$store.state.selectedBox != "deleted",
+                      expression: "$store.state.selectedBox != 'deleted'"
+                    }
+                  ],
                   staticClass: "btn btn-default btn-xs",
                   attrs: {
                     "data-toggle": "modal",
@@ -45846,6 +45866,38 @@ var render = function() {
                     attrs: { "aria-hidden": "true" }
                   }),
                   _vm._v(" 删除\n                    ")
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$store.state.selectedBox == "deleted",
+                      expression: "$store.state.selectedBox == 'deleted'"
+                    }
+                  ],
+                  staticClass: "btn btn-default btn-xs",
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": ".restore-modal",
+                    type: "button"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.restore(item.id)
+                    }
+                  }
+                },
+                [
+                  _c("span", {
+                    staticClass: "glyphicon glyphicon-repeat",
+                    attrs: { "aria-hidden": "true" }
+                  }),
+                  _vm._v(" 还原\n                    ")
                 ]
               )
             ]),
@@ -45954,11 +46006,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.sign = this.sign === 'remove' ? 'plus' : 'remove';
         }
     },
-    mounted: function mounted() {
-        Vue.nextTick(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -46333,6 +46381,256 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-2a5ad150", module.exports)
+  }
+}
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(81)
+/* template */
+var __vue_template__ = __webpack_require__(82)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Password/Restore.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6eae179e", Component.options)
+  } else {
+    hotAPI.reload("data-v-6eae179e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            account: '',
+            id: 0,
+            belongBox: 0
+        };
+    },
+
+
+    watch: {
+        deleted: function deleted(newVal, oldVal) {
+            this.id = newVal;
+            var password = this.$store.state.passwordList[newVal];
+            this.account = password.account;
+            this.belongBox = password.boxId;
+        }
+    },
+    computed: {
+        deleted: function deleted() {
+            return this.$store.state.deletePassword;
+        }
+    },
+    methods: {
+        confirm: function confirm() {
+            var _this = this;
+
+            var url = '/boxes/' + this.belongBox + '/passwords/' + this.id + '/restore';
+            axios.put(url, {}).then(function (response) {
+                if (response.data.code == 0) {
+                    _this.decr('deleted');
+                    _this.incr(_this.belongBox);
+                    _this.$store.commit('deletePasswordList', _this.id);
+                    _this.closeModal();
+                } else {}
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        },
+        incr: function incr(id) {
+            var incr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+            // 所选+1
+            var currCount = this.$store.state.passwordCount[id];
+            if (currCount != '99+') {
+                this.$store.commit({
+                    type: 'updatePasswordAccount',
+                    id: id,
+                    count: currCount ? currCount * 1 + incr : 1
+                });
+            }
+        },
+        decr: function decr(id) {
+            var decr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+            // 所选-1
+            var currCount = this.$store.state.passwordCount[id];
+            if (currCount != '99+') {
+                this.$store.commit({
+                    type: 'updatePasswordAccount',
+                    id: id,
+                    count: currCount ? currCount * 1 - decr : 1
+                });
+            }
+        },
+        closeModal: function closeModal() {
+            Vue.nextTick(function () {
+                $('.close-modal').trigger('click');
+            });
+        }
+    }
+
+});
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade restore-modal",
+      attrs: {
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "mySmallModalLabel"
+      }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "modal-dialog modal-sm", attrs: { role: "document" } },
+        [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm._v(
+                "\n                Are you sure restore account:" +
+                  _vm._s(_vm.account) +
+                  "?\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-default close-modal",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Cancel")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.confirm()
+                    }
+                  }
+                },
+                [_vm._v("Restore")]
+              )
+            ])
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Confirm")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6eae179e", module.exports)
   }
 }
 

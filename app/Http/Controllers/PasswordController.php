@@ -177,9 +177,30 @@ class PasswordController extends Controller
     {
         $passwords = $this->password->getPasswordList(0, 'deleted');
         if ($passwords) {
-            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url', 'subAccount']);
+            $passwords = $this->password->prepare($passwords, ['id', 'title', 'account', 'url', 'subAccount', 'boxId']);
         }
 
         return $this->success($passwords);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function restore(Request $request)
+    {
+        $password = $this->password->find($request->p_id);
+        if (auth()->user()->cant('restore', [$password, $request->box])) {
+            return $this->failed('no access');
+        }
+        $password->restore();
+        $this->box->whereId($password->box_id)->increment('passwords');
+
+        return $this->success($this->password->prepare($password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
+    }
+
+    public function getPassword()
+    {
+
     }
 }

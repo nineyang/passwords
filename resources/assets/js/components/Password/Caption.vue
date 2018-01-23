@@ -19,9 +19,17 @@
                             </a>
 
                         </button>
-                        <button data-toggle="modal" data-target=".delete-modal" type="button" @click="deleted(item.id)"
+                        <button v-show="$store.state.selectedBox != 'deleted'" data-toggle="modal" data-target=".delete-modal" type="button" @click="deleted(item.id)"
                                 class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
+                        </button>
+
+                        <button v-show="$store.state.selectedBox == 'deleted'" data-toggle="modal"
+                                data-target=".restore-modal"
+                                type="button"
+                                @click="restore(item.id)"
+                                class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 还原
                         </button>
                     </p>
                     <div class="clearfix"></div>
@@ -43,6 +51,9 @@
                 this.$store.commit('updateSelectedPassword', id);
             },
             deleted(id){
+                this.$store.commit('updateDeletePassword', id);
+            },
+            restore(id){
                 this.$store.commit('updateDeletePassword', id);
             }
         }

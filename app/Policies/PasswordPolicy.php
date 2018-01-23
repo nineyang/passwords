@@ -63,4 +63,18 @@ class PasswordPolicy
             && $user->id === $box->user_id
             && $password->box_id === $box->id;
     }
+
+    /**
+     * Determine whether the user can delete the password.
+     *
+     * @param  \App\Models\User $user
+     * @param  \App\Models\Password $password
+     * @return mixed
+     */
+    public function restore(User $user, Password $password, Box $box)
+    {
+        return $user->id === $password->user_id
+            && $user->id === $box->user_id
+            && $password->box_id === $box->id;
+    }
 }

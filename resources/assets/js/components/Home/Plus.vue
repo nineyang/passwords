@@ -32,9 +32,6 @@
             }
         },
         mounted(){
-            Vue.nextTick(() => {
-                $('[data-toggle="tooltip"]').tooltip();
-            });
         }
     }
 </script>

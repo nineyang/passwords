@@ -129,4 +129,17 @@ class BaseModel extends Model
 
         return true;
     }
+
+    /**
+     * @return bool
+     */
+    public function restore()
+    {
+        $this->update([
+            'status' => $this->getStatus()['available'],
+            'updated_at' => time()
+        ]);
+
+        return true;
+    }
 }

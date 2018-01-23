@@ -61,6 +61,7 @@
             <home-plus></home-plus>
 
             <password-delete></password-delete>
+            <password-restore></password-restore>
 
 
         </div>

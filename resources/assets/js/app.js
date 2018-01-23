@@ -8,7 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import Vuex from 'vuex';
-window.Vue.use(Vuex);
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
@@ -103,6 +103,7 @@ Vue.component('password-li', require('./components/Password/Li.vue'));
 Vue.component('password-modal', require('./components/Password/Modal.vue'));
 Vue.component('password-caption', require('./components/Password/Caption.vue'));
 Vue.component('password-delete', require('./components/Password/Delete.vue'));
+Vue.component('password-restore', require('./components/Password/Restore.vue'));
 Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
 Vue.directive('tooltip', function (el, binding) {
@@ -111,7 +112,7 @@ Vue.directive('tooltip', function (el, binding) {
         placement: binding.arg,
         trigger: 'hover'
     })
-})
+});
 
 const app = new Vue({
     el: '#app',

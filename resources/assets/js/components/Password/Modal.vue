@@ -90,7 +90,7 @@
                 newTitle: '',
                 url: '',
                 account: '',
-                password: '',
+                password: '***',
                 safetyLevel: 1,
                 error: {
                     title: false,
