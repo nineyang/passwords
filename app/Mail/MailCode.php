@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class MailCode extends Mailable implements ShouldQueue
 {
@@ -43,6 +44,12 @@ class MailCode extends Mailable implements ShouldQueue
         $user_id = $this->user->id;
         $key = $user_id . ':' . $this->type;
         $code = rand(1000, 9999);
+        Log::debug('info', [
+            'code' => $code,
+            'key' => $key,
+            'time' => config('redis.' . $this->type),
+            'type' => $this->type
+        ]);
         Cache::set($key, $code, config('redis.' . $this->type));
         return $this->markdown('mails.code')
             ->with([

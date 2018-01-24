@@ -61,7 +61,7 @@ Route::group(['prefix' => 'boxes'], function () {
         Route::put('/{b_id}/passwords/{p_id}/restore', 'PasswordController@restore');
 
         # 发送查看密码的请求
-        Route::get('/{b_id}/passwords/{p_id}/email/code' , 'PasswordController@sendCode');
+        Route::get('/{b_id}/passwords/{p_id}/email/code' , 'PasswordController@sendMailCode');
 
     });
 

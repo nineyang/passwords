@@ -1072,8 +1072,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-__webpack_require__(64);
-module.exports = __webpack_require__(65);
+__webpack_require__(70);
+module.exports = __webpack_require__(71);
 
 
 /***/ }),
@@ -1102,7 +1102,18 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
         passwordCount: {},
         deletedPasswordList: {},
         selectedPassword: 0,
-        deletePassword: 0
+        deletePassword: 0,
+        // 查看密码时的弹框类型
+        passwordModal: {
+            type: 'password',
+            error: {
+                info: '',
+                password: false,
+                code: false
+            },
+            mainPassword: '',
+            code: ''
+        }
     },
     mutations: {
         updateSelectedBox: function updateSelectedBox(state, id) {
@@ -1158,6 +1169,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
             state.deletedPasswordList = {};
             delete tmp[id];
             state.deletedPasswordList = tmp;
+        },
+        updatePasswordModal: function updatePasswordModal(state, payload) {
+            var tmp = state.passwordModal;
+            state.passwordModal = {};
+            tmp[payload.key] = payload.value;
+            state.passwordModal = tmp;
         }
     },
     actions: {},
@@ -1187,9 +1204,10 @@ Vue.component('box-modal', __webpack_require__(49));
 Vue.component('password-li', __webpack_require__(52));
 Vue.component('password-modal', __webpack_require__(55));
 Vue.component('password-caption', __webpack_require__(58));
-Vue.component('password-delete', __webpack_require__(77));
-Vue.component('password-restore', __webpack_require__(80));
-Vue.component('home-plus', __webpack_require__(61));
+Vue.component('password-delete', __webpack_require__(61));
+Vue.component('password-restore', __webpack_require__(64));
+Vue.component('password-password', __webpack_require__(83));
+Vue.component('home-plus', __webpack_require__(67));
 
 Vue.directive('tooltip', function (el, binding) {
     $(el).tooltip({
@@ -44986,6 +45004,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['pwdTitle', 'boxes', 'safety_levels'],
@@ -44998,7 +45020,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             newTitle: '',
             url: '',
             account: '',
-            password: '***',
+            password: '*',
             safetyLevel: 1,
             error: {
                 title: false,
@@ -45050,6 +45072,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         get: function get() {
             var _this = this;
 
+            this.password = '*';
             axios.get('/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword, {}).then(function (response) {
                 if (response.data.code == 0) {
                     var info = response.data.data[0];
@@ -45060,6 +45083,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.newTitle = info.title;
                     _this.pwdDescription = info.description;
                     _this.belongBox = info.boxId;
+                    switch (_this.safetyLevel) {
+                        case 2:
+                        case 3:
+                            _this.$store.commit({
+                                type: 'updatePasswordModal',
+                                key: 'type',
+                                value: _this.safetyLevel == 2 ? 'password' : 'code'
+                            });
+                            break;
+                        default:
+                            break;
+                    }
                 } else {}
             }).catch(function (error) {
                 if (error.response) {
@@ -45145,6 +45180,79 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log(error.response.data.message);
                 }
             });
+        },
+        viewPassword: function viewPassword() {
+            console.log(this.password);
+            if (this.password != '*') {
+                this.password = '*';
+                return false;
+            }
+            switch (this.safetyLevel) {
+                case 3:
+                    //                发送邮件
+                    this.sendEmail();
+                case 2:
+                    Vue.nextTick(function () {
+                        $('.password-modal').modal('toggle');
+                    });
+                    this.$store.commit({
+                        type: 'updatePasswordModal',
+                        key: 'error',
+                        value: {
+                            info: '',
+                            password: false,
+                            code: false
+                        }
+                    });
+                    break;
+                default:
+                    this.getPassword();
+                    break;
+            }
+        },
+        getPassword: function getPassword() {
+            var _this4 = this;
+
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+            var url = '/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword + '/password';
+            axios.get(url, {
+                params: params
+            }).then(function (response) {
+                _this4.errorInfo = '';
+                if (response.data.code == 0) {
+                    Vue.nextTick(function () {
+                        $('.close-password-modal').trigger('click');
+                    });
+                    _this4.password = response.data.data.password;
+                } else {
+                    switch (_this4.safetyLevel) {
+                        case 2:
+                        case 3:
+                            _this4.$store.commit({
+                                type: 'updatePasswordModal',
+                                key: 'error',
+                                value: {
+                                    info: _this4.safetyLevel == 2 ? '密码错误' : '验证码错误',
+                                    password: _this4.safetyLevel == 2,
+                                    code: _this4.safetyLevel == 3
+                                }
+                            });
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                }
+            });
+        },
+        sendEmail: function sendEmail() {
+            var url = '/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword + '/email/code';
+            axios.get(url, {});
         }
     },
     computed: {
@@ -45153,6 +45261,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         selectedPassword: function selectedPassword() {
             return this.$store.state.selectedPassword;
+        },
+        passwordModalPassword: function passwordModalPassword() {
+            return this.$store.state.passwordModal.mainPassword;
+        },
+        passwordModalCode: function passwordModalCode() {
+            return this.$store.state.passwordModal.code;
         }
     },
     watch: {
@@ -45168,6 +45282,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.defaultTitle = '新增记录';
                 this.pwdId = 0;
             }
+        },
+        passwordModalPassword: function passwordModalPassword(newVal, oldVal) {
+            var params = {
+                main_password: newVal
+            };
+            this.getPassword(params);
+        },
+        passwordModalCode: function passwordModalCode(newVal, oldVal) {
+            var params = {
+                code: newVal
+            };
+            this.getPassword(params);
         }
     }
 });
@@ -45305,34 +45431,121 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "input-group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.password,
-                          expression: "password"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "password",
-                        name: "password",
-                        id: "password",
-                        required: "required"
-                      },
-                      domProps: { value: _vm.password },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                    (_vm.password == "*" ? "password" : "input") === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.password,
+                              expression: "password"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            name: "password",
+                            id: "password",
+                            required: "required",
+                            type: "checkbox"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.password)
+                              ? _vm._i(_vm.password, null) > -1
+                              : _vm.password
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.password,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.password = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.password = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.password = $$c
+                              }
+                            }
                           }
-                          _vm.password = $event.target.value
-                        }
-                      }
-                    }),
+                        })
+                      : (_vm.password == "*" ? "password" : "input") === "radio"
+                        ? _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.password,
+                                expression: "password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              name: "password",
+                              id: "password",
+                              required: "required",
+                              type: "radio"
+                            },
+                            domProps: { checked: _vm._q(_vm.password, null) },
+                            on: {
+                              change: function($event) {
+                                _vm.password = null
+                              }
+                            }
+                          })
+                        : _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.password,
+                                expression: "password"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              name: "password",
+                              id: "password",
+                              required: "required",
+                              type: _vm.password == "*" ? "password" : "input"
+                            },
+                            domProps: { value: _vm.password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.password = $event.target.value
+                              }
+                            }
+                          }),
                     _vm._v(" "),
-                    _vm._m(1)
+                    _c("span", { staticClass: "input-group-btn" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-default",
+                          attrs: { type: "button" },
+                          on: { click: _vm.viewPassword }
+                        },
+                        [
+                          _c("span", {
+                            class: {
+                              glyphicon: true,
+                              "glyphicon-eye-open": _vm.password == "*",
+                              "glyphicon-eye-close": _vm.password != "*"
+                            },
+                            attrs: { "aria-hidden": "true" }
+                          })
+                        ]
+                      )
+                    ])
                   ])
                 ]
               ),
@@ -45591,23 +45804,6 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-btn" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-default", attrs: { type: "button" } },
-        [
-          _c("span", {
-            staticClass: "glyphicon glyphicon-eye-open",
-            attrs: { "aria-hidden": "true" }
-          })
-        ]
-      )
-    ])
   }
 ]
 render._withStripped = true
@@ -45945,223 +46141,6 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/Home/Plus.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-18dfcbc3", Component.options)
-  } else {
-    hotAPI.reload("data-v-18dfcbc3", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            sign: 'plus'
-        };
-    },
-
-    methods: {
-        showTools: function showTools() {
-            this.sign = this.sign === 'remove' ? 'plus' : 'remove';
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "add-plus" }, [
-    _c("div", { staticClass: "tools" }, [
-      _c(
-        "button",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.sign == "remove",
-              expression: "sign == 'remove'"
-            },
-            {
-              name: "tooltip",
-              rawName: "v-tooltip:top",
-              value: "添加密码记录",
-              expression: "'添加密码记录'",
-              arg: "top"
-            }
-          ],
-          staticClass: "btn btn-default",
-          attrs: {
-            type: "button",
-            "aria-label": "Left Align",
-            "data-toggle": "modal",
-            "data-target": "#passwordModal"
-          }
-        },
-        [
-          _c("span", {
-            staticClass: "glyphicon glyphicon-plus",
-            attrs: { "aria-hidden": "true" }
-          })
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.sign == "remove",
-              expression: "sign == 'remove'"
-            },
-            {
-              name: "tooltip",
-              rawName: "v-tooltip:top",
-              value: "生成密码工具",
-              expression: "'生成密码工具'",
-              arg: "top"
-            }
-          ],
-          staticClass: "btn btn-default",
-          attrs: { type: "button", "aria-label": "Left Align" }
-        },
-        [
-          _c("span", {
-            staticClass: "glyphicon glyphicon-wrench",
-            attrs: { "aria-hidden": "true" }
-          })
-        ]
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-success add-plus-button",
-        attrs: { type: "button", "aria-label": "Left Align" },
-        on: {
-          click: function($event) {
-            _vm.showTools()
-          }
-        }
-      },
-      [
-        _c("span", {
-          class: "glyphicon glyphicon-" + _vm.sign,
-          attrs: { "aria-hidden": "true" }
-        })
-      ]
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-18dfcbc3", module.exports)
-  }
-}
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(78)
-/* template */
-var __vue_template__ = __webpack_require__(79)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
 Component.options.__file = "resources/assets/js/components/Password/Delete.vue"
 
 /* hot reload */
@@ -46184,7 +46163,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 78 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46287,7 +46266,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 79 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46385,15 +46364,15 @@ if (false) {
 }
 
 /***/ }),
-/* 80 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(81)
+var __vue_script__ = __webpack_require__(65)
 /* template */
-var __vue_template__ = __webpack_require__(82)
+var __vue_template__ = __webpack_require__(66)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46432,7 +46411,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 81 */
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46537,7 +46516,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 82 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46631,6 +46610,590 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-6eae179e", module.exports)
+  }
+}
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(68)
+/* template */
+var __vue_template__ = __webpack_require__(69)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Home/Plus.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-18dfcbc3", Component.options)
+  } else {
+    hotAPI.reload("data-v-18dfcbc3", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            sign: 'plus'
+        };
+    },
+
+    methods: {
+        showTools: function showTools() {
+            this.sign = this.sign === 'remove' ? 'plus' : 'remove';
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "add-plus" }, [
+    _c("div", { staticClass: "tools" }, [
+      _c(
+        "button",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.sign == "remove",
+              expression: "sign == 'remove'"
+            },
+            {
+              name: "tooltip",
+              rawName: "v-tooltip:top",
+              value: "添加密码记录",
+              expression: "'添加密码记录'",
+              arg: "top"
+            }
+          ],
+          staticClass: "btn btn-default",
+          attrs: {
+            type: "button",
+            "aria-label": "Left Align",
+            "data-toggle": "modal",
+            "data-target": "#passwordModal"
+          }
+        },
+        [
+          _c("span", {
+            staticClass: "glyphicon glyphicon-plus",
+            attrs: { "aria-hidden": "true" }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.sign == "remove",
+              expression: "sign == 'remove'"
+            },
+            {
+              name: "tooltip",
+              rawName: "v-tooltip:top",
+              value: "生成密码工具",
+              expression: "'生成密码工具'",
+              arg: "top"
+            }
+          ],
+          staticClass: "btn btn-default",
+          attrs: { type: "button", "aria-label": "Left Align" }
+        },
+        [
+          _c("span", {
+            staticClass: "glyphicon glyphicon-wrench",
+            attrs: { "aria-hidden": "true" }
+          })
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-success add-plus-button",
+        attrs: { type: "button", "aria-label": "Left Align" },
+        on: {
+          click: function($event) {
+            _vm.showTools()
+          }
+        }
+      },
+      [
+        _c("span", {
+          class: "glyphicon glyphicon-" + _vm.sign,
+          attrs: { "aria-hidden": "true" }
+        })
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-18dfcbc3", module.exports)
+  }
+}
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(84)
+/* template */
+var __vue_template__ = __webpack_require__(85)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Password/Password.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0e990308", Component.options)
+  } else {
+    hotAPI.reload("data-v-0e990308", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            mainPassword: '',
+            code: ''
+        };
+    },
+
+
+    methods: {
+        confirm: function confirm() {
+            var type = this.$store.state.passwordModal.type;
+            var key, value;
+            if (type == 'password') {
+                key = 'mainPassword';
+                value = this.mainPassword;
+            } else {
+                key = 'code';
+                value = this.code;
+            }
+            console.log(key, value);
+            this.$store.commit({
+                type: 'updatePasswordModal',
+                key: key,
+                value: value
+            });
+        },
+        closeModal: function closeModal() {
+            Vue.nextTick(function () {
+                $('.close-password-modal').trigger('click');
+            });
+        },
+        sendEmail: function sendEmail() {
+            var url = '/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword + '/email/code';
+            axios.get(url, {});
+        }
+    }
+
+});
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade password-modal",
+      attrs: {
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "mySmallModalLabel"
+      }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "modal-dialog modal-sm", attrs: { role: "document" } },
+        [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$store.state.passwordModal.type == "password",
+                      expression:
+                        "$store.state.passwordModal.type == 'password'"
+                    }
+                  ],
+                  class: {
+                    "form-group": true,
+                    "has-error": _vm.$store.state.passwordModal.error.password
+                  }
+                },
+                [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "control-label",
+                      attrs: { for: "mainPassword" }
+                    },
+                    [_vm._v("请输入主密码:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.mainPassword,
+                        expression: "mainPassword"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "mainPassword",
+                      id: "mainPassword",
+                      required: "required"
+                    },
+                    domProps: { value: _vm.mainPassword },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.mainPassword = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$store.state.passwordModal.type == "code",
+                      expression: "$store.state.passwordModal.type == 'code'"
+                    }
+                  ],
+                  class: {
+                    "form-group": true,
+                    "has-error": _vm.$store.state.passwordModal.error.code
+                  }
+                },
+                [
+                  _c(
+                    "label",
+                    { staticClass: "control-label", attrs: { for: "code" } },
+                    [_vm._v("请输入邮件收到的code:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.code,
+                        expression: "code"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "code",
+                      id: "code",
+                      required: "required"
+                    },
+                    domProps: { value: _vm.code },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.code = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary pull-right btn-sm",
+                      staticStyle: { "margin-top": "5px" },
+                      attrs: { type: "button" },
+                      on: { click: _vm.sendEmail }
+                    },
+                    [_vm._v("Send\n                        Again")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "clearfix" })
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$store.state.passwordModal.error.info != "",
+                      expression: "$store.state.passwordModal.error.info != ''"
+                    }
+                  ],
+                  staticClass: "form-group"
+                },
+                [
+                  _c("p", { staticClass: "text-danger" }, [
+                    _vm._v(_vm._s(_vm.$store.state.passwordModal.error.info))
+                  ])
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn btn-default close-modal close-password-modal",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("\n                    Close\n                ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.confirm }
+                },
+                [_vm._v("Confirm")]
+              )
+            ])
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Confirm")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0e990308", module.exports)
   }
 }
 

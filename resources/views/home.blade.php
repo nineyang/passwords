@@ -62,7 +62,7 @@
 
             <password-delete></password-delete>
             <password-restore></password-restore>
-
+            <password-password></password-password>
 
         </div>
     </div>

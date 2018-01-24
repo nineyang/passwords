@@ -22,12 +22,16 @@
                         <div :class="{ 'form-group': true, 'has-error': error.password }">
                             <label for="password" class="control-label">Password:</label>
                             <div class="input-group">
-                                <input type="password" name="password" class="form-control" id="password"
+                                <input :type="password == '*' ? 'password' : 'input'" name="password"
+                                       class="form-control"
+                                       id="password"
                                        v-model="password"
                                        required="required">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                    <button class="btn btn-default" type="button" @click="viewPassword">
+                                        <span :class="{'glyphicon':true ,'glyphicon-eye-open' : password == '*' ,
+                                        'glyphicon-eye-close' : password != '*'}"
+                                              aria-hidden="true"></span>
                                     </button>
                                   </span>
                             </div>
@@ -90,7 +94,7 @@
                 newTitle: '',
                 url: '',
                 account: '',
-                password: '***',
+                password: '*',
                 safetyLevel: 1,
                 error: {
                     title: false,
@@ -139,6 +143,7 @@
                 });
             },
             get(){
+                this.password = '*';
                 axios.get('/boxes/' + this.$store.state.selectedBox + '/passwords/' + this.$store.state.selectedPassword, {})
                     .then(response => {
                         if (response.data.code == 0) {
@@ -150,6 +155,18 @@
                             this.newTitle = info.title;
                             this.pwdDescription = info.description;
                             this.belongBox = info.boxId;
+                            switch (this.safetyLevel) {
+                                case 2:
+                                case 3:
+                                    this.$store.commit({
+                                        type: 'updatePasswordModal',
+                                        key: 'type',
+                                        value: this.safetyLevel == 2 ? 'password' : 'code'
+                                    });
+                                    break;
+                                default:
+                                    break;
+                            }
                         } else {
 
                         }
@@ -237,6 +254,80 @@
                             console.log(error.response.data.message);
                         }
                     });
+            },
+            viewPassword(){
+                console.log(this.password);
+                if (this.password != '*') {
+                    this.password = '*';
+                    return false;
+                }
+                switch (this.safetyLevel) {
+                    case 3:
+                        //                发送邮件
+                        this.sendEmail();
+                    case 2:
+                        Vue.nextTick(() => {
+                            $('.password-modal').modal('toggle')
+                        });
+                        this.$store.commit({
+                            type: 'updatePasswordModal',
+                            key: 'error',
+                            value: {
+                                info: '',
+                                password: false,
+                                code: false
+                            }
+                        });
+                        break;
+                    default:
+                        this.getPassword();
+                        break;
+                }
+            },
+            getPassword(params = {}){
+
+                let url = '/boxes/' + this.$store.state.selectedBox + '/passwords/' +
+                    this.$store.state.selectedPassword + '/password';
+                axios.get(url, {
+                    params: params
+                })
+                    .then(response => {
+                        this.errorInfo = '';
+                        if (response.data.code == 0) {
+                            Vue.nextTick(() => {
+                                $('.close-password-modal').trigger('click');
+                            });
+                            this.password = response.data.data.password;
+                        } else {
+                            switch (this.safetyLevel) {
+                                case 2:
+                                case 3:
+                                    this.$store.commit({
+                                        type: 'updatePasswordModal',
+                                        key: 'error',
+                                        value: {
+                                            info: this.safetyLevel == 2 ? '密码错误' : '验证码错误',
+                                            password: this.safetyLevel == 2,
+                                            code: this.safetyLevel == 3
+                                        }
+                                    });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                        }
+                    });
+            },
+            sendEmail(){
+                let url = '/boxes/' + this.$store.state.selectedBox + '/passwords/' +
+                    this.$store.state.selectedPassword + '/email/code';
+                axios.get(url, {});
             }
         },
         computed: {
@@ -245,7 +336,13 @@
             },
             selectedPassword () {
                 return this.$store.state.selectedPassword;
-            }
+            },
+            passwordModalPassword(){
+                return this.$store.state.passwordModal.mainPassword;
+            },
+            passwordModalCode(){
+                return this.$store.state.passwordModal.code;
+            },
         },
         watch: {
             selected (newVal, oldVal) {
@@ -260,6 +357,18 @@
                     this.defaultTitle = '新增记录';
                     this.pwdId = 0;
                 }
+            },
+            passwordModalPassword(newVal, oldVal){
+                let params = {
+                    main_password: newVal
+                };
+                this.getPassword(params);
+            },
+            passwordModalCode(newVal, oldVal){
+                let params = {
+                    code: newVal
+                };
+                this.getPassword(params);
             }
         }
     }

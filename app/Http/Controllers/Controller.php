@@ -60,12 +60,22 @@ class Controller extends BaseController
     }
 
     /**
-     * @param string $type
-     * @return mixed
+     * @return array
      */
-    public function sendMailCode($type = 'view')
+    public function sendMailCode()
     {
+        $type = \request()->get('type') ?: 'view';
         # 邮件队列发送邮件
-        event(new SendEmailEvent(auth()->user(), 'code', ['type' => $type]));
+        try {
+            event(new SendEmailEvent(auth()->user(), 'code', ['type' => $type]));
+        } catch (\Exception $exception) {
+            $error_msg = $exception->getMessage();
+            \Log::debug('send code mail failed', [
+                'reason' => $error_msg
+            ]);
+
+            return $this->failed($error_msg);
+        }
+        return $this->success('success');
     }
 }

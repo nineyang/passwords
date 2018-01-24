@@ -98,7 +98,12 @@ class PasswordPolicy
                 return Hash::check(request()->get('main_password'), $user->password);
                 break;
             case 3:
-                return Cache::get("{$password->user_id}:viewCode") == request()->get('code');
+                $key = $password->user_id . ':view';
+                $res = Cache::get($key) == request()->get('code');
+                if ($res) {
+                    Cache::delete($key);
+                }
+                return $res;
                 break;
             default:
                 return true;

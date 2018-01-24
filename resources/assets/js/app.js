@@ -17,7 +17,18 @@ const store = new Vuex.Store({
         passwordCount: {},
         deletedPasswordList: {},
         selectedPassword: 0,
-        deletePassword: 0
+        deletePassword: 0,
+        // 查看密码时的弹框类型
+        passwordModal: {
+            type: 'password',
+            error: {
+                info: '',
+                password: false,
+                code: false
+            },
+            mainPassword: '',
+            code: ''
+        }
     },
     mutations: {
         updateSelectedBox(state, id){
@@ -74,6 +85,12 @@ const store = new Vuex.Store({
             delete tmp[id];
             state.deletedPasswordList = tmp;
         },
+        updatePasswordModal(state, payload){
+            let tmp = state.passwordModal;
+            state.passwordModal = {};
+            tmp[payload.key] = payload.value;
+            state.passwordModal = tmp;
+        }
     },
     actions: {},
     getters: {
@@ -104,6 +121,7 @@ Vue.component('password-modal', require('./components/Password/Modal.vue'));
 Vue.component('password-caption', require('./components/Password/Caption.vue'));
 Vue.component('password-delete', require('./components/Password/Delete.vue'));
 Vue.component('password-restore', require('./components/Password/Restore.vue'));
+Vue.component('password-password', require('./components/Password/Password.vue'));
 Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
 Vue.directive('tooltip', function (el, binding) {

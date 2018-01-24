@@ -91,14 +91,15 @@ class PasswordController extends Controller
             'account' => 'required|max:32',
             'password' => 'required',
             'boxId' => 'required',
-            'safetyLevel' => 'required|int'
+//            'safetyLevel' => 'required|int'
         ]);
         if (is_array($res) && !empty($res)) {
             return $this->failed($res);
         }
-        if (!config('password.level.' . $request->get('safetyLevel'))) {
-            return $this->failed('level is wrong');
-        }
+        # 暂时不能修改level
+//        if (!config('password.level.' . $request->get('safetyLevel'))) {
+//            return $this->failed('level is wrong');
+//        }
 
         try {
             if ($request->get('boxId') != $request->password->box_id) {
@@ -112,7 +113,7 @@ class PasswordController extends Controller
                 'account' => $request->get('account'),
                 'password' => encrypt($request->get('password')),
                 'box_id' => $request->get('boxId'),
-                'safety_level' => $request->get('safetyLevel'),
+//                'safety_level' => $request->get('safetyLevel'),
             ]);
 
         } catch (Exception $exception) {
@@ -199,15 +200,18 @@ class PasswordController extends Controller
         return $this->success($this->password->prepare($password->toArray(), ['id', 'title', 'account', 'url', 'subAccount']));
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function getPassword(Request $request)
     {
         if (auth()->user()->cant('viewPassword', $request->password)) {
             return $this->failed('no access');
         }
-    }
 
-    public function sendCode()
-    {
-        $this->sendMailCode();
+        return $this->success([
+            'password' => decrypt($request->password->password)
+        ]);
     }
 }
