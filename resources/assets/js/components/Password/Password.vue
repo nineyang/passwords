@@ -21,7 +21,7 @@
                         <input type="text" name="code" class="form-control" id="code"
                                v-model="code"
                                required="required">
-                        <button style="margin-top:5px;" type="button" class="btn btn-primary pull-right btn-sm"
+                        <button style="margin-top:5px;" type="button" class="btn btn-info pull-right btn-sm"
                                 @click="sendEmail">Send
                             Again</button>
                         <div class="clearfix"></div>

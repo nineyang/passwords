@@ -7,7 +7,7 @@
             </button>
 
             <button v-show="sign == 'remove'" type="button" class="btn btn-default" aria-label="Left Align"
-                    v-tooltip:top="'生成密码工具'">
+                    v-tooltip:top="'生成密码工具'" data-toggle="modal" data-target=".rand-modal">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
             </button>
         </div>

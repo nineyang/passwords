@@ -9,6 +9,8 @@ require('./bootstrap');
 window.Vue = require('vue');
 import Vuex from 'vuex';
 Vue.use(Vuex);
+import VueClipboards from 'vue-clipboards';
+Vue.use(VueClipboards);
 
 const store = new Vuex.Store({
     state: {
@@ -122,6 +124,7 @@ Vue.component('password-caption', require('./components/Password/Caption.vue'));
 Vue.component('password-delete', require('./components/Password/Delete.vue'));
 Vue.component('password-restore', require('./components/Password/Restore.vue'));
 Vue.component('password-password', require('./components/Password/Password.vue'));
+Vue.component('password-rand', require('./components/Password/Rand.vue'));
 Vue.component('home-plus', require('./components/Home/Plus.vue'));
 
 Vue.directive('tooltip', function (el, binding) {

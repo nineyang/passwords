@@ -63,6 +63,7 @@
             <password-delete></password-delete>
             <password-restore></password-restore>
             <password-password></password-password>
+            <password-rand></password-rand>
 
         </div>
     </div>
