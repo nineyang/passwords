@@ -79,11 +79,13 @@ class BaseModel extends Model
     public function add($params = [], $status = 'available')
     {
         $add = array_merge($params, [
-            'user_id' => auth()->id(),
             'status' => $this->getStatus()[$status],
             'created_at' => time(),
             'updated_at' => time()
         ]);
+        if (!isset($add['user_id'])) {
+            $add['user_id'] = auth()->id();
+        }
 
         return $this->create($add);
     }

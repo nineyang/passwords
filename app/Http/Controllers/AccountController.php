@@ -46,7 +46,8 @@ class AccountController extends Controller
                     'title' => '默认',
                     'type' => 6,
                     'description' => '默认',
-                    'sort' => 1
+                    'sort' => 1,
+                    'user_id' => $request->get('uid')
                 ]);
                 $title = 'Success';
                 $info = 'Activation successful';
